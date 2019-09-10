@@ -1,0 +1,15 @@
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\DynaSharp\ThirdAssembly\bin\Debug\ThirdAssembly.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\DynaSharp\ThirdAssembly\bin\Debug\ThirdAssembly.pdb
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\DynaSharp\ThirdAssembly\obj\Debug\ThirdAssembly.csprojResolveAssemblyReference.cache
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\DynaSharp\ThirdAssembly\obj\Debug\ThirdAssembly.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\DynaSharp\ThirdAssembly\obj\Debug\ThirdAssembly.pdb
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\ThirdAssembly\bin\Debug\ThirdAssembly.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\ThirdAssembly\bin\Debug\ThirdAssembly.pdb
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\ThirdAssembly\obj\Debug\ThirdAssembly.csprojResolveAssemblyReference.cache
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\ThirdAssembly\obj\Debug\ThirdAssembly.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\ThirdAssembly\obj\Debug\ThirdAssembly.pdb
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\ThirdAssembly\bin\Debug\ThirdAssembly.dll
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\ThirdAssembly\bin\Debug\ThirdAssembly.pdb
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\ThirdAssembly\obj\Debug\ThirdAssembly.csprojResolveAssemblyReference.cache
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\ThirdAssembly\obj\Debug\ThirdAssembly.dll
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\ThirdAssembly\obj\Debug\ThirdAssembly.pdb

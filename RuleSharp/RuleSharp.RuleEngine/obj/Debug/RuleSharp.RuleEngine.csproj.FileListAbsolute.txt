@@ -1,0 +1,12 @@
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\RuleSharp.RuleEngine\bin\Debug\RuleSharp.RuleEngine.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\RuleSharp.RuleEngine\bin\Debug\RuleSharp.RuleEngine.pdb
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\RuleSharp.RuleEngine\bin\Debug\Mono.CSharp.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\RuleSharp.RuleEngine\obj\Debug\RuleSharp.RuleEngine.csprojResolveAssemblyReference.cache
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\RuleSharp.RuleEngine\obj\Debug\RuleSharp.RuleEngine.dll
+C:\Users\nejimon.ravindran\Documents\Pers\Projects\RuleSharp\RuleSharp.RuleEngine\obj\Debug\RuleSharp.RuleEngine.pdb
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\RuleSharp.RuleEngine\bin\Debug\RuleSharp.RuleEngine.dll
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\RuleSharp.RuleEngine\bin\Debug\RuleSharp.RuleEngine.pdb
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\RuleSharp.RuleEngine\bin\Debug\Mono.CSharp.dll
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\RuleSharp.RuleEngine\obj\Debug\RuleSharp.RuleEngine.csprojResolveAssemblyReference.cache
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\RuleSharp.RuleEngine\obj\Debug\RuleSharp.RuleEngine.dll
+C:\Users\rodrigo.santos\Downloads\RuleSharp\RuleSharp\RuleSharp.RuleEngine\obj\Debug\RuleSharp.RuleEngine.pdb
