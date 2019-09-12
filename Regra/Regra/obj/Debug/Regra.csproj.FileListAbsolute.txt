@@ -1,0 +1,11 @@
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\bin\Debug\Regra.exe.config
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\bin\Debug\Regra.exe
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\bin\Debug\Regra.pdb
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\bin\Debug\Newtonsoft.Json.dll
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\bin\Debug\Newtonsoft.Json.xml
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\obj\Debug\Regra.csprojResolveAssemblyReference.cache
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\obj\Debug\Regra.exe
+c:\users\rodrigo.santos\documents\visual studio 2015\Projects\Regra\Regra\obj\Debug\Regra.pdb
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\bin\Debug\Regra.exe.config
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\obj\Debug\Regra.exe
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\obj\Debug\Regra.pdb
