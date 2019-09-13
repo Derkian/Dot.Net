@@ -115,6 +115,7 @@ namespace Regra
             var resultC = aplicaRegra(11, regras);
             var resultD = aplicaRegra(12, regras);
 
+            CustomRule.Executar();
         }
 
         static dynamic aplicaRegra(int IdRegra, List<Regra> lstRegras)
