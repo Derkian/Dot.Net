@@ -1,19 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace Regra
 {
     class Program
     {
-        public class Rule
+        public class Regra
         {
             public int Id { get; set; }
 
@@ -21,198 +15,198 @@ namespace Regra
 
             public int IdRegraCondicao { get; set; }
 
-            public string MemberName
+            public string ValorA
             {
                 get;
                 set;
             }
 
-            public string Operator
+            public string Operacao
             {
                 get;
                 set;
             }
 
-            public string TargetValue
+            public string ValorB
             {
                 get;
                 set;
             }
 
-            public string TargetType { get; set; }
+            public string TipoDoValor { get; set; }
 
-            public bool PerformsCalc { get; set; } = false;
+            public bool RealizaCalculo { get; set; } = false;
 
-            public Rule(int id, int idRegraVariavel, int idRegraCondicao, string Operator)
+            public Regra(int id, int idRegraVariavel, int idRegraCondicao, string operacao)
             {
                 this.Id = id;
                 this.IdRegraVariavel = idRegraVariavel;
                 this.IdRegraCondicao = idRegraCondicao;
-                this.Operator = Operator;
+                this.Operacao = operacao;
             }
 
-            public Rule(int id,
+            public Regra(int id,
                        int idRegraVariavel,
                        string Operator,
                        string targetValue,
                        string TargetType,
-                       bool performsCalc = false)
+                       bool realizaCalculo = false)
             {
                 this.Id = id;
-                this.MemberName = MemberName;
-                this.Operator = Operator;
+                this.ValorA = ValorA;
+                this.Operacao = Operator;
                 this.IdRegraVariavel = idRegraVariavel;
-                this.TargetType = TargetType;
-                this.PerformsCalc = performsCalc;
-                this.TargetValue = targetValue;
+                this.TipoDoValor = TargetType;
+                this.RealizaCalculo = realizaCalculo;
+                this.ValorB = targetValue;
             }
 
-            public Rule(int id,
-                        string MemberName,
+            public Regra(int id,
+                        string valorA,
                         string Operator,
                         int idRegraCondicao,
-                        string TargetType,
-                        bool performsCalc = false)
+                        string tipoDoValor,
+                        bool realizaCalculo = false)
             {
                 this.Id = id;
-                this.MemberName = MemberName;
-                this.Operator = Operator;
+                this.ValorA = valorA;
+                this.Operacao = Operator;
                 this.IdRegraCondicao = idRegraCondicao;
-                this.TargetType = TargetType;
-                this.PerformsCalc = performsCalc;
+                this.TipoDoValor = tipoDoValor;
+                this.RealizaCalculo = realizaCalculo;
             }
 
-            public Rule(int id,
-                        string MemberName,
-                        string Operator,
-                        string TargetValue,
-                        string TargetType,
-                        bool performsCalc = false)
+            public Regra(int id,
+                        string valorA,
+                        string operacao,
+                        string valorB,
+                        string tipoDoValor,
+                        bool realizaCalculo = false)
             {
                 this.Id = id;
-                this.MemberName = MemberName;
-                this.Operator = Operator;
-                this.TargetValue = TargetValue;
-                this.TargetType = TargetType;
-                this.PerformsCalc = performsCalc;
+                this.ValorA = valorA;
+                this.Operacao = operacao;
+                this.ValorB = valorB;
+                this.TipoDoValor = tipoDoValor;
+                this.RealizaCalculo = realizaCalculo;
             }
         }
 
         static void Main(string[] args)
         {
-            List<Rule> rules = new List<Rule>
+            List<Regra> regras = new List<Regra>
             {
-                new Rule(1, "A", "Equal", "F", "System.String"),
-                new Rule(2, "A", "Equal", "B", "System.String"),
-                new Rule(3, 1, 2, "Or"),
-                new Rule(4, "C", "Equal", "D", "System.String"),
-                new Rule(5, 3, 4, "Or"), //COMEÇAR AQUI                         
-                new Rule(7, "2019", "Subtract","10", "System.Int32", true),
-                new Rule(8, "2008", "GreaterThan", 7, "System.Int32"), // COMECAR AQUI
-                new Rule(9, 8, 5, "And"), // COMECAR AQUI,
-                new Rule(10, "10,10", "Add", "20,20", "System.Double", true),
-                new Rule(11, 10, "Subtract", "2" , "System.Double", true), //COMECAR AQUI
-                new Rule(12, "10", "Equal", "20", "System.Int32")
+                new Regra(1, "A", "Equal", "A", "System.String"),
+                new Regra(2, "A", "Equal", "B", "System.String"),
+                new Regra(3, 1, 2, "Or"),
+                new Regra(4, "C", "Equal", "D", "System.String"),
+                new Regra(5, 3, 4, "Or"), //COMEÇAR AQUI                         
+                new Regra(7, "2019", "Subtract","10", "System.Int32", true),
+                new Regra(8, "2008", "GreaterThan", 7, "System.Int32"), // COMECAR AQUI
+                new Regra(9, 8, 5, "And"), // COMECAR AQUI,
+                new Regra(10, "10,10", "Add", "20,20", "System.Double", true),
+                new Regra(11, 10, "Subtract", "2" , "System.Double", true), //COMECAR AQUI
+                new Regra(12, "10", "Equal", "20", "System.Int32")
             };
 
-            var result = AplicaRegra(5, rules);
-            var resultA = AplicaRegra(8, rules);
-            var resultB = AplicaRegra(9, rules);
-            var resultC = AplicaRegra(11, rules);
-            var resultD = AplicaRegra(12, rules);
+            var result = aplicaRegra(5, regras);
+            var resultA = aplicaRegra(8, regras);
+            var resultB = aplicaRegra(9, regras);
+            var resultC = aplicaRegra(11, regras);
+            var resultD = aplicaRegra(12, regras);
 
         }
 
-        static dynamic AplicaRegra(int IdRegra, List<Rule> lstRegras)
+        static dynamic aplicaRegra(int IdRegra, List<Regra> lstRegras)
         {
-            Rule rule = lstRegras.FirstOrDefault(r => r.Id == IdRegra);
-            dynamic result = null;
-            dynamic resultB = null;
+            Regra regra = lstRegras.FirstOrDefault(r => r.Id == IdRegra);
+            dynamic resultadoA = null;
+            dynamic resultadoB = null;
 
-            if (rule == null)
+            if (regra == null)
                 return false;
 
             //REGRA VARIAVEL
-            if (rule.IdRegraVariavel > 0)
-                result = AplicaRegra(rule.IdRegraVariavel, lstRegras);
+            if (regra.IdRegraVariavel > 0)
+                resultadoA = aplicaRegra(regra.IdRegraVariavel, lstRegras);
             else
-                result = rule.MemberName;
+                resultadoA = regra.ValorA;
 
             //REGRA CONDIÇÃO
-            if (rule.IdRegraCondicao > 0)
-                resultB = AplicaRegra(rule.IdRegraCondicao, lstRegras);
+            if (regra.IdRegraCondicao > 0)
+                resultadoB = aplicaRegra(regra.IdRegraCondicao, lstRegras);
             else
-                resultB = rule.TargetValue;
+                resultadoB = regra.ValorB;
 
 
             //VALIDAR OS TIPOS
             if (
-                (!result.GetType().FullName.Equals(resultB.GetType().FullName)) ||
+                (!resultadoA.GetType().FullName.Equals(resultadoB.GetType().FullName)) ||
                 (
-                    !string.IsNullOrEmpty(rule.TargetType) &&
+                    !string.IsNullOrEmpty(regra.TipoDoValor) &&
                     (
-                        !result.GetType().Equals(Type.GetType(rule.TargetType)) || !resultB.GetType().Equals(Type.GetType(rule.TargetType))
+                        !resultadoA.GetType().Equals(Type.GetType(regra.TipoDoValor)) || !resultadoB.GetType().Equals(Type.GetType(regra.TipoDoValor))
                     )
                 )
             )
             {
-                result = Cast(result, Type.GetType(rule.TargetType));
-                resultB = Cast(resultB, Type.GetType(rule.TargetType));
+                resultadoA = converter(resultadoA, Type.GetType(regra.TipoDoValor));
+                resultadoB = converter(resultadoB, Type.GetType(regra.TipoDoValor));
             }
 
             //APLICA CALCULO
-            if (rule.PerformsCalc)
+            if (regra.RealizaCalculo)
             {
-                return compilarRegra(result, resultB, rule.Operator);
+                return compilarRegra(resultadoA, resultadoB, regra.Operacao);
             }
 
 
-            return blnCompilarRegra(result, resultB, rule.Operator);
+            return blnCompilarRegra(resultadoA, resultadoB, regra.Operacao);
         }
         
-        public static dynamic Cast(dynamic obj, Type castTo)
+        public static dynamic converter(dynamic objeto, Type tipoConvercao)
         {
-            return Convert.ChangeType(obj, castTo);
+            return Convert.ChangeType(objeto, tipoConvercao);
         }
 
-        static bool blnCompilarRegra<T>(T objA, T objB, string Operator)
+        static bool blnCompilarRegra<T>(T objetoA, T objetoB, string operador)
         {
-            var paramUser = Expression.Parameter(typeof(T));
-            Expression expr = CriarExpressao<T>(objA, objB, Operator, paramUser);
+            var parametro = Expression.Parameter(typeof(T));
+            Expression expressao = criarExpressao<T>(objetoA, objetoB, operador, parametro);
 
             // build a lambda function User->bool and compile it
-            return Expression.Lambda<Func<T, bool>>(expr, paramUser).Compile()(objA);
+            return Expression.Lambda<Func<T, bool>>(expressao, parametro).Compile()(objetoA);
         }
 
-        static T compilarRegra<T>(T objA, T objB, string Operator)
+        static T compilarRegra<T>(T objetoA, T objetoB, string operador)
         {
-            var paramUser = Expression.Parameter(typeof(T));
-            Expression expr = CriarExpressao<T>(objA, objB, Operator, paramUser);
+            var parametro = Expression.Parameter(typeof(T));
+            Expression expr = criarExpressao<T>(objetoA, objetoB, operador, parametro);
 
             // build a lambda function User->bool and compile it
-            return Expression.Lambda<Func<T, T>>(expr, paramUser).Compile()(objA);
+            return Expression.Lambda<Func<T, T>>(expr, parametro).Compile()(objetoA);
         }
 
-        static Expression CriarExpressao<T>(T objA, T objB, string Operator, ParameterExpression param)
+        static Expression criarExpressao<T>(T objetoA, T objetoB, string operador, ParameterExpression parametro)
         {
-            Expression left = param;
-            Type tProp = typeof(T);
+            Expression esquerda = parametro;
+            Type typPropriedade = typeof(T);
 
-            ExpressionType tBinary;
+            ExpressionType operacao;
 
-            if (ExpressionType.TryParse(Operator, out tBinary))
+            if (ExpressionType.TryParse(operador, out operacao))
             {
-                var right = Expression.Constant(Convert.ChangeType(objB, tProp));
+                var direita = Expression.Constant(Convert.ChangeType(objetoB, typPropriedade));
                 // use a binary operation, e.g. 'Equal' -> 'u.Age == 15'
-                return Expression.MakeBinary(tBinary, left, right);
+                return Expression.MakeBinary(operacao, esquerda, direita);
             }
             else
             {
-                var method = tProp.GetMethod(Operator);
-                var tParam = method.GetParameters()[0].ParameterType;
-                var right = Expression.Constant(Convert.ChangeType(objB, tParam));
+                var metodo = typPropriedade.GetMethod(operador);
+                var tyParametro = metodo.GetParameters()[0].ParameterType;
+                var direita = Expression.Constant(Convert.ChangeType(objetoB, tyParametro));
                 // use a method call, e.g. 'Contains' -> 'u.Tags.Contains(some_tag)'
-                return Expression.Call(left, method, right);
+                return Expression.Call(esquerda, metodo, direita);
             }
         }
     }
