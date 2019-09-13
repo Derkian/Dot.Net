@@ -51,7 +51,28 @@ namespace Regra
                 this.Operator = Operator;
             }
 
-            public Rule(int id, string MemberName, string Operator, int idRegraCondicao, string TargetType, bool performsCalc = false)
+            public Rule(int id,
+                       int idRegraVariavel,
+                       string Operator,
+                       string targetValue,
+                       string TargetType,
+                       bool performsCalc = false)
+            {
+                this.Id = id;
+                this.MemberName = MemberName;
+                this.Operator = Operator;
+                this.IdRegraVariavel = idRegraVariavel;
+                this.TargetType = TargetType;
+                this.PerformsCalc = performsCalc;
+                this.TargetValue = targetValue;
+            }
+
+            public Rule(int id,
+                        string MemberName,
+                        string Operator,
+                        int idRegraCondicao,
+                        string TargetType,
+                        bool performsCalc = false)
             {
                 this.Id = id;
                 this.MemberName = MemberName;
@@ -61,7 +82,12 @@ namespace Regra
                 this.PerformsCalc = performsCalc;
             }
 
-            public Rule(int id, string MemberName, string Operator, string TargetValue, string TargetType, bool performsCalc = false)
+            public Rule(int id,
+                        string MemberName,
+                        string Operator,
+                        string TargetValue,
+                        string TargetType,
+                        bool performsCalc = false)
             {
                 this.Id = id;
                 this.MemberName = MemberName;
@@ -76,22 +102,24 @@ namespace Regra
         {
             List<Rule> rules = new List<Rule>
             {
-                new Rule(1, "A", "Equal", "A", "System.String"),
+                new Rule(1, "A", "Equal", "F", "System.String"),
                 new Rule(2, "A", "Equal", "B", "System.String"),
                 new Rule(3, 1, 2, "Or"),
                 new Rule(4, "C", "Equal", "D", "System.String"),
-                new Rule(5, 3, 4, "Or"), //COMEÇAR AQUI                
+                new Rule(5, 3, 4, "Or"), //COMEÇAR AQUI                         
                 new Rule(7, "2019", "Subtract","10", "System.Int32", true),
                 new Rule(8, "2008", "GreaterThan", 7, "System.Int32"), // COMECAR AQUI
                 new Rule(9, 8, 5, "And"), // COMECAR AQUI,
-                new Rule(10, "10", "Add", "20", "System.Int32", true),
-                new Rule(11, "2", "Subtract", 10 , "System.Int32", true) //COMECAR AQUI
+                new Rule(10, "10,10", "Add", "20,20", "System.Double", true),
+                new Rule(11, 10, "Subtract", "2" , "System.Double", true), //COMECAR AQUI
+                new Rule(12, "10", "Equal", "20", "System.Int32")
             };
 
             var result = AplicaRegra(5, rules);
             var resultA = AplicaRegra(8, rules);
             var resultB = AplicaRegra(9, rules);
-            var resultB = AplicaRegra(11, rules);
+            var resultC = AplicaRegra(11, rules);
+            var resultD = AplicaRegra(12, rules);
 
         }
 
@@ -118,7 +146,15 @@ namespace Regra
 
 
             //VALIDAR OS TIPOS
-            if (!result.GetType().FullName.Equals(resultB.GetType().FullName))
+            if (
+                (!result.GetType().FullName.Equals(resultB.GetType().FullName)) ||
+                (
+                    !string.IsNullOrEmpty(rule.TargetType) &&
+                    (
+                        !result.GetType().Equals(Type.GetType(rule.TargetType)) || !resultB.GetType().Equals(Type.GetType(rule.TargetType))
+                    )
+                )
+            )
             {
                 result = Cast(result, Type.GetType(rule.TargetType));
                 resultB = Cast(resultB, Type.GetType(rule.TargetType));
@@ -127,19 +163,13 @@ namespace Regra
             //APLICA CALCULO
             if (rule.PerformsCalc)
             {
-                switch (rule.TargetType)
-                {
-                    case "System.Int32":
-                        return intCompilarRegra(Convert.ToInt32(result), Convert.ToInt32(resultB), rule.Operator);
-                    case "System.Double":
-                        return dblCompilarRegra(Convert.ToDouble(result), Convert.ToDouble(resultB), rule.Operator);
-                }
+                return compilarRegra(result, resultB, rule.Operator);
             }
 
 
             return blnCompilarRegra(result, resultB, rule.Operator);
         }
-
+        
         public static dynamic Cast(dynamic obj, Type castTo)
         {
             return Convert.ChangeType(obj, castTo);
@@ -154,22 +184,13 @@ namespace Regra
             return Expression.Lambda<Func<T, bool>>(expr, paramUser).Compile()(objA);
         }
 
-        static int intCompilarRegra<T>(T objA, T objB, string Operator)
+        static T compilarRegra<T>(T objA, T objB, string Operator)
         {
             var paramUser = Expression.Parameter(typeof(T));
             Expression expr = CriarExpressao<T>(objA, objB, Operator, paramUser);
 
             // build a lambda function User->bool and compile it
-            return Expression.Lambda<Func<T, int>>(expr, paramUser).Compile()(objA);
-        }
-
-        static double dblCompilarRegra<T>(T objA, T objB, string Operator)
-        {
-            var paramUser = Expression.Parameter(typeof(T));
-            Expression expr = CriarExpressao<T>(objA, objB, Operator, paramUser);
-
-            // build a lambda function User->bool and compile it
-            return Expression.Lambda<Func<T, double>>(expr, paramUser).Compile()(objA);
+            return Expression.Lambda<Func<T, T>>(expr, paramUser).Compile()(objA);
         }
 
         static Expression CriarExpressao<T>(T objA, T objB, string Operator, ParameterExpression param)
