@@ -91,9 +91,17 @@ namespace Regra
                 this.RealizaCalculo = realizaCalculo;
             }
         }
+        
 
         static void Main(string[] args)
         {
+            string a, b;
+            a = "pneu traseiro";
+            b = "pneus";
+
+            var teste = HerbertLevenshteinAlgorithm.Compute(a, b);
+            var teste1 = HerbertLevenshteinAlgorithm.Compare(a, b);
+
             List<Regra> regras = new List<Regra>
             {
                 new Regra(1, "True", "Equal", "True", "System.Boolean"),

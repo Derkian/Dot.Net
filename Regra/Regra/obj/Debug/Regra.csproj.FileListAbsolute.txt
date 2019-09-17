@@ -1,1 +1,8 @@
 C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\bin\Debug\Regra.exe.config
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\bin\Debug\Regra.exe
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\bin\Debug\Regra.pdb
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\bin\Debug\Newtonsoft.Json.dll
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\bin\Debug\Newtonsoft.Json.xml
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\obj\Debug\Regra.exe
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\obj\Debug\Regra.pdb
+C:\Users\rodrigo.santos\Source\Repos\Dot.Net\Regra\Regra\obj\Debug\Regra.csprojResolveAssemblyReference.cache
