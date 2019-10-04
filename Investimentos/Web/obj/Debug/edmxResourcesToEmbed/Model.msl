@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MoneyModelStoreContainer" CdmEntityContainer="MoneyEntities">
+    <EntitySetMapping Name="Historico">
+      <EntityTypeMapping TypeName="MoneyModel.Historico">
+        <MappingFragment StoreEntitySet="Historico">
+          <ScalarProperty Name="Rendimento" ColumnName="Rendimento" />
+          <ScalarProperty Name="Data" ColumnName="Data" />
+          <ScalarProperty Name="Nome" ColumnName="Nome" />
+          <ScalarProperty Name="Fundo" ColumnName="Fundo" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

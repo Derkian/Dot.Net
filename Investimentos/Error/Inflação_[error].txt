@@ -1,0 +1,3 @@
+Referência de objeto não definida para uma instância de um objeto.
+   em OpenQA.Selenium.Remote.RemoteWebElement.get_Text()
+   em Inflacao.Sync() na D:\Investimentos\ConsoleApp1\Fundos\Inflacao.cs:linha 38
