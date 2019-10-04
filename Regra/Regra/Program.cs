@@ -99,23 +99,23 @@ namespace Regra
             a = "pneu traseiro";
             b = "pneus";
 
-            var teste = HerbertLevenshteinAlgorithm.Compute(a, b);
-            var teste1 = HerbertLevenshteinAlgorithm.Compare(a, b);
+            //var teste = HerbertLevenshteinAlgorithm.Compute(a, b);
+            //var teste1 = HerbertLevenshteinAlgorithm.Compare(a, b);
 
             List<Regra> regras = new List<Regra>
             {
                 new Regra(1, "True", "Equal", "True", "System.Boolean"),
-                new Regra(2, "A", "Equal", "B", "System.String"),
+                new Regra(2, "A", "Equal", "A", "System.String"),
                 new Regra(3, 1, 2, "Or"),
                 new Regra(4, "C", "Equal", "D", "System.String"),
-                new Regra(5, 3, 4, "Or"), //COMEÇAR AQUI                         
+                new Regra(5, 3, 4, "Or"), //COMEÇAR AQUI
                 new Regra(7, "2019", "Subtract","10", "System.Int32", true),
                 new Regra(8, "2008", "GreaterThan", 7, "System.Int32"), // COMECAR AQUI
-                new Regra(9, 8, 5, "And"), // COMECAR AQUI,
+                new Regra(9, 8, 5, "And"), // COMECAR AQUI
                 new Regra(10, "10,10", "Add", "20,20", "System.Double", true),
                 new Regra(11, 10, "Subtract", "2" , "System.Double", true), //COMECAR AQUI
                 new Regra(12, "10", "NotEqual", "20", "System.Int32"),
-                new Regra(13, 9, 12, "Or") // Todas as Regras
+                new Regra(13, 9, 12, "Or") // TODAS AS REGRAS
             };
 
             var bla = aplicaRegra(13, regras);
