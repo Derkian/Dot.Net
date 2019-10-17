@@ -1,0 +1,92 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{38B7CC9C-1B8E-4D34-A996-020F17518D03}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{752958B7-D557-4440-8625-8CDF9905F378}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{76981281-9769-49C2-920B-71D7B15D3A9D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{4B970312-21BF-48E8-9A71-60B27565E98F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotalLoss.Domain", "TotalLoss.Domain\TotalLoss.Domain.csproj", "{B948CCB9-4234-4D75-A8E5-2D58BB2FA186}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository", "Repository", "{043540FF-30DC-4996-9808-F861A5F13914}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotalLoss.Repository", "TotalLoss.Repository\TotalLoss.Repository.csproj", "{D784B3B2-6582-474B-9B3C-9EC599F5465B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotalLoss.Service", "TotalLoss.Service\TotalLoss.Service.csproj", "{6F177E59-82E8-4466-B322-740168B0D08D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{EB5AD166-EC43-4F69-95AA-C711769CE3C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotalLoss.Test", "TotalLoss.Test\TotalLoss.Test.csproj", "{178FFF0B-76A0-41FC-B573-A461962C918A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotalLoss.API", "TotalLoss.API\TotalLoss.API.csproj", "{B6CA9E30-BFC7-4F8B-AC2D-3BFC82CBEC79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B948CCB9-4234-4D75-A8E5-2D58BB2FA186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B948CCB9-4234-4D75-A8E5-2D58BB2FA186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B948CCB9-4234-4D75-A8E5-2D58BB2FA186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B948CCB9-4234-4D75-A8E5-2D58BB2FA186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D784B3B2-6582-474B-9B3C-9EC599F5465B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D784B3B2-6582-474B-9B3C-9EC599F5465B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D784B3B2-6582-474B-9B3C-9EC599F5465B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D784B3B2-6582-474B-9B3C-9EC599F5465B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F177E59-82E8-4466-B322-740168B0D08D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F177E59-82E8-4466-B322-740168B0D08D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F177E59-82E8-4466-B322-740168B0D08D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F177E59-82E8-4466-B322-740168B0D08D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178FFF0B-76A0-41FC-B573-A461962C918A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178FFF0B-76A0-41FC-B573-A461962C918A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178FFF0B-76A0-41FC-B573-A461962C918A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178FFF0B-76A0-41FC-B573-A461962C918A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6CA9E30-BFC7-4F8B-AC2D-3BFC82CBEC79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6CA9E30-BFC7-4F8B-AC2D-3BFC82CBEC79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6CA9E30-BFC7-4F8B-AC2D-3BFC82CBEC79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6CA9E30-BFC7-4F8B-AC2D-3BFC82CBEC79}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B948CCB9-4234-4D75-A8E5-2D58BB2FA186} = {752958B7-D557-4440-8625-8CDF9905F378}
+		{043540FF-30DC-4996-9808-F861A5F13914} = {76981281-9769-49C2-920B-71D7B15D3A9D}
+		{D784B3B2-6582-474B-9B3C-9EC599F5465B} = {043540FF-30DC-4996-9808-F861A5F13914}
+		{6F177E59-82E8-4466-B322-740168B0D08D} = {4B970312-21BF-48E8-9A71-60B27565E98F}
+		{178FFF0B-76A0-41FC-B573-A461962C918A} = {EB5AD166-EC43-4F69-95AA-C711769CE3C6}
+		{B6CA9E30-BFC7-4F8B-AC2D-3BFC82CBEC79} = {38B7CC9C-1B8E-4D34-A996-020F17518D03}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://axbrtfs:8080/tfs/solerabr
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = TotalLoss.Domain\\TotalLoss.Domain.csproj
+		SccProjectTopLevelParentUniqueName1 = TotalLoss.sln
+		SccProjectName1 = TotalLoss.Domain
+		SccLocalPath1 = TotalLoss.Domain
+		SccProjectUniqueName2 = TotalLoss.Repository\\TotalLoss.Repository.csproj
+		SccProjectTopLevelParentUniqueName2 = TotalLoss.sln
+		SccProjectName2 = TotalLoss.Repository
+		SccLocalPath2 = TotalLoss.Repository
+		SccProjectUniqueName3 = TotalLoss.Service\\TotalLoss.Service.csproj
+		SccProjectTopLevelParentUniqueName3 = TotalLoss.sln
+		SccProjectName3 = TotalLoss.Service
+		SccLocalPath3 = TotalLoss.Service
+		SccProjectUniqueName4 = TotalLoss.Test\\TotalLoss.Test.csproj
+		SccProjectTopLevelParentUniqueName4 = TotalLoss.sln
+		SccProjectName4 = TotalLoss.Test
+		SccLocalPath4 = TotalLoss.Test
+		SccProjectUniqueName5 = TotalLoss.API\\TotalLoss.API.csproj
+		SccProjectTopLevelParentUniqueName5 = TotalLoss.sln
+		SccProjectName5 = TotalLoss.API
+		SccLocalPath5 = TotalLoss.API
+	EndGlobalSection
+EndGlobal
