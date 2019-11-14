@@ -1,7 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using TotalLoss.Domain.Enums;
 using TotalLoss.Domain.Model;
@@ -510,7 +512,7 @@ namespace TotalLoss.Service
                 {
                     //generate thumbanail from image stream
                     if (inicidentImage.Image.Length > 0)
-                        inicidentImage.Thumbnail = GenerateThumbnail(inicidentImage.Image);
+                        inicidentImage.Thumbnail = GetJpegThumbnail(inicidentImage.Image, 200, 200);
 
                     //cria uma transacao
                     this._workRepository.BeginTransaction();
@@ -544,7 +546,7 @@ namespace TotalLoss.Service
         /// <returns></returns>
         public bool DeleteImage(string incidentKey, int idIncidentImage)
         {
-            bool removeImage = false; 
+            bool removeImage = false;
 
             try
             {
@@ -558,7 +560,7 @@ namespace TotalLoss.Service
                 if (incident == null)
                 {
                     return false;
-                }                 
+                }
                 else if (incident.Status != StatusIncidentAssessment.Finalized)
                 {
                     //abre uma transação
@@ -590,48 +592,92 @@ namespace TotalLoss.Service
         #region | Private 
 
         /// <summary>
-        /// Gerar Thumbnail da imagem enviada
+        /// Get Jpeg Thumbnail
         /// </summary>
-        /// <param name="imageToGenerate"></param>
+        /// <param name="Img"></param>
+        /// <param name="NewWidth"></param>
+        /// <param name="MaxHeight"></param>
+        /// <param name="AllowLargerImageCreation"></param>
         /// <returns></returns>
-        private byte[] GenerateThumbnail(byte[] imageToGenerate)
+        public byte[] GetJpegThumbnail(byte[] Img, int NewWidth, int MaxHeight, bool AllowLargerImageCreation = false)
         {
-            byte[] imageContent;
+            byte[] result = new byte[0];
 
-            //Set image to MemoryStream
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream(imageToGenerate))
+            Image FullsizeImage = null;
+            Image ResizedImage = null;
+
+            MemoryStream ms = new MemoryStream(Img);
+            MemoryStream msresized = new MemoryStream();
+
+            try
             {
-                //Generate Image
-                using (System.Drawing.Image image = System.Drawing.Image.FromStream(ms))
+                FullsizeImage = Image.FromStream(ms);
+                int NewHeight = 0;
+
+                // Prevent using images internal thumbnail
+                FullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                FullsizeImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+                if (FullsizeImage.Width > NewWidth && FullsizeImage.Height > MaxHeight)
                 {
-                    //Generate Thumbnail
-                    using (System.Drawing.Image thumbnailImage = image.GetThumbnailImage(200, 200, new System.Drawing.Image.GetThumbnailImageAbort(ThumbnailCallback), IntPtr.Zero))
+                    // If we are re sizing upwards to a bigger size
+                    if (AllowLargerImageCreation)
                     {
-                        // make a memory stream to work with the image bytes
-                        using (System.IO.MemoryStream imageStream = new System.IO.MemoryStream())
+                        if (FullsizeImage.Width <= NewWidth)
                         {
-                            // put the image into the memory stream
-                            thumbnailImage.Save(imageStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-                            // make byte array the same size as the image
-                            imageContent = new Byte[imageStream.Length];
-
-                            // rewind the memory stream
-                            imageStream.Position = 0;
-
-                            // load the byte array with the image
-                            imageStream.Read(imageContent, 0, (int)imageStream.Length);
+                            NewWidth = FullsizeImage.Width;
                         }
                     }
+
+                    //Keep aspect ratio
+                    NewHeight = FullsizeImage.Height * NewWidth / FullsizeImage.Width;
+                    if (NewHeight > MaxHeight)
+                    {
+                        // Resize with height instead
+                        NewWidth = FullsizeImage.Width * MaxHeight / FullsizeImage.Height;
+                        NewHeight = MaxHeight;
+                    }
+
+                    ResizedImage = FullsizeImage.GetThumbnailImage(NewWidth, NewHeight, null, IntPtr.Zero);
+                    ResizedImage.Save(msresized, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    result = msresized.ToArray();
+                }
+                else
+                {
+                    return Img;
                 }
             }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                // Clear handle to original file so that we can overwrite it if necessary
+                if (ResizedImage != null)
+                {
+                    ResizedImage.Dispose();
+                    ResizedImage = null;
+                }
 
-            return imageContent;
-        }
+                if (FullsizeImage != null)
+                {
+                    FullsizeImage.Dispose();
+                    FullsizeImage = null;
+                }
 
-        public bool ThumbnailCallback()
-        {
-            return true;
+                msresized.Close();
+                msresized.Dispose();
+                msresized = null;
+
+                ms.Close();
+                ms.Dispose();
+                ms = null;
+
+                GC.Collect();
+            }
+
+            return result;
         }
 
         /// <summary>
