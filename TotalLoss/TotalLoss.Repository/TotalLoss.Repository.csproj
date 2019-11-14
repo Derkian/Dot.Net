@@ -48,19 +48,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseRepository.cs" />
+    <Compile Include="Interface\IBaseRepository.cs" />
+    <Compile Include="WorkRepository.cs" />
     <Compile Include="CategoryRepository.cs" />
     <Compile Include="ConfigurationRepository.cs" />
+    <Compile Include="HistoryRepository.cs" />
     <Compile Include="IncidentAssessmentRepository.cs" />
-    <Compile Include="Interface\IBaseRepository.cs" />
+    <Compile Include="Interface\IWorkRepository.cs" />
     <Compile Include="Interface\ICategoryRepository.cs" />
     <Compile Include="Interface\IConfigurationRepository.cs" />
+    <Compile Include="Interface\IHistoryRepository.cs" />
     <Compile Include="Interface\IIncidentAssessmentRepository.cs" />
     <Compile Include="Interface\IQuestionRepository.cs" />
     <Compile Include="Interface\ISalvageCompanyRepository.cs" />
+    <Compile Include="Interface\ITowTruckDriverRepository.cs" />
+    <Compile Include="Interface\IUserRepository.cs" />
+    <Compile Include="Interface\ITowingCompanyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuestionRepository.cs" />
+    <Compile Include="BaseRepository.cs" />
     <Compile Include="SalvageCompanyRepository.cs" />
+    <Compile Include="TowingCompanyRepository.cs" />
+    <Compile Include="TowTruckDriverRepository.cs" />
+    <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TotalLoss.Domain\TotalLoss.Domain.csproj">

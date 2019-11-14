@@ -15,7 +15,6 @@ namespace TotalLoss.Service
 
         public ShortMessageService(string account, string password)
         {
-
             simpleSend = new SimpleSending(account, password);
         }
 
@@ -29,7 +28,7 @@ namespace TotalLoss.Service
                 Message = sms.Message,
                 Id = sms.Id
             };
-
+                        
             List<string> _simpleSendResponse = this.simpleSend.send(simpleMessage);
 
             string result = _simpleSendResponse.First();            

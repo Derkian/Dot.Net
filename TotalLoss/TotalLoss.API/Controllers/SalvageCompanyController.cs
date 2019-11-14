@@ -8,36 +8,34 @@ namespace TotalLoss.API.Controllers
 {
     public class SalvageCompanyController : ApiController
     {
+        #region Object
         private SalvageCompanyService _service;
+        #endregion
 
+        #region Constructor
         public SalvageCompanyController(SalvageCompanyService service)
         {
             this._service = service;
         }
+        #endregion
 
+        #region Actions
         [HttpGet]
-        [Route("api/SalvagesCompanies/GetSalvagesCompanies/{idInsuranceCompany}")]        
+        [Route("api/SalvagesCompanies/GetSalvagesCompanies/{idInsuranceCompany}")]
         public async Task<IHttpActionResult> GetSalvagesByCompany(int idInsuranceCompany)
         {
             IList<SalvageCompany> listSalvage = null;
-            Domain.Model.Configuration request = null;
-            try
-            {
-                // Cria entidade Configuration
-                request = new Domain.Model.Configuration() { Id = idInsuranceCompany };
+            Domain.Model.Company request = null;
 
-                // Busca todas Categorias por Companhia informada
-                listSalvage = await Task.Run(() => this._service.ListSalvageByCompany(request));
+            // Cria entidade Configuration
+            request = new Domain.Model.Company() { Id = idInsuranceCompany };
 
-                // Verifica se existem Categorias pela Companhia informada
-                if (listSalvage == null)
-                    return NotFound();
-            }
-            catch (System.Exception ex)
-            {
-                // Retorna Json de Erro interno gerado 
-                return InternalServerError(new System.Exception(ex.Message));
-            }
+            // Busca empresas de Pátios cadastradas por Segurada informada
+            listSalvage = await Task.Run(() => this._service.ListSalvageByCompany(request));
+
+            // Verifica se existem empresas de Pátios associadas à Seguradora informada
+            if (listSalvage == null || listSalvage.Count == 0)
+                return NotFound();
 
             // Retorna response com todas Categorias por Campanhia
             return Ok(listSalvage);
@@ -47,28 +45,21 @@ namespace TotalLoss.API.Controllers
         [Route("api/SalvagesCompanies/GetSalvageCompanyLocations/{idSalvageCompany}")]
         public async Task<IHttpActionResult> GetSalvageCompanyLocation(int idSalvageCompany)
         {
-            IList<Location> listSalvage = null;
+            IList<Location> listLocation = null;
             Domain.Model.SalvageCompany request = null;
-            try
-            {
-                // Cria entidade Configuration
-                request = new Domain.Model.SalvageCompany() { Id = idSalvageCompany };
 
-                // Busca todas Categorias por Companhia informada
-                listSalvage = await Task.Run(() => this._service.ListSalvageLocation(request));
+            // Cria entidade SalvageCompany
+            request = new Domain.Model.SalvageCompany() { Id = idSalvageCompany };
 
-                // Verifica se existem Categorias pela Companhia informada
-                if (listSalvage == null)
-                    return NotFound();
-            }
-            catch (System.Exception ex)
-            {
-                // Retorna Json de Erro interno gerado 
-                return InternalServerError(new System.Exception(ex.Message));
-            }
+            // Busca todas Localizações da empresa de Pátio informada
+            listLocation = await Task.Run(() => this._service.ListSalvageLocation(request));
 
-            // Retorna response com todas Categorias por Campanhia
-            return Ok(listSalvage);
+            // Verifica se existem localizações para a empresa de Pátio informada
+            if (listLocation == null || listLocation.Count == 0)
+                return NotFound();
+
+            return Ok(listLocation);
         }
+        #endregion
     }
 }

@@ -1,0 +1,2 @@
+550093429020;Texto da mensagem;TESTE0002;Human
+550092565197;Texto da mensagem;TESTE0003;Human

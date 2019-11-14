@@ -9,7 +9,6 @@ namespace TotalLoss.Repository.Interface
 {
     public interface ICategoryRepository : IBaseRepository
     {
-        IList<Category> ListByCompany(Configuration configuration);
+        IList<Category> ListByCompany(Company company);
     }
-
 }

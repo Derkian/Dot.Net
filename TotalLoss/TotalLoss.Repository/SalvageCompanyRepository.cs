@@ -12,12 +12,12 @@ namespace TotalLoss.Repository
     public class SalvageCompanyRepository
         : BaseRepository, Interface.ISalvageCompanyRepository
     {
-        public SalvageCompanyRepository(IDbConnection conexao) 
-            : base(conexao)
+        public SalvageCompanyRepository(IDbConnection connection) 
+            : base(connection)
         {
         }
 
-        public IList<SalvageCompany> ListSalvageByCompany(Configuration company)
+        public IList<SalvageCompany> ListSalvageByCompany(Company company)
         {
             try
             {
@@ -33,9 +33,9 @@ namespace TotalLoss.Repository
                                                         FROM SALVAGE S
                                                         INNER JOIN SALVAGECOMPANY SC
 	                                                        ON S.IDSALVAGE = SC.IDSALVAGE
-                                                        INNER JOIN COMPANY C
-	                                                        ON SC.IDCOMPANY = C.IDCOMPANY
-	                                                    WHERE    C.IDCOMPANY = @idConfiguration",
+                                                        INNER JOIN INSURANCECOMPANY C
+	                                                        ON SC.IDINSURANCECOMPANY = C.IDINSURANCECOMPANY
+	                                                    WHERE    C.IDINSURANCECOMPANY = @idConfiguration",
                                                         param: parameters
                                                    )
                                                    .Distinct()
@@ -72,7 +72,9 @@ namespace TotalLoss.Repository
 	                                                                    D.EMAIL				EMAIL,
 	                                                                    D.FONE				FONE,
 	                                                                    D.FAX				FAX,
-                                                                        D.MANAGER           MANAGER
+                                                                        D.MANAGER           MANAGER,
+                                                                        D.LATITUDE          LATITUDE,
+                                                                        D.LONGITUDE         LONGITUDE
                                                                     FROM [SALVAGE] S
                                                                     INNER JOIN [LOCATION]  L 
 	                                                                    ON S.IDSALVAGE = L.IDSALVAGE

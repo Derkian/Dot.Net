@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TotalLoss.Domain.Enums;
 
 namespace TotalLoss.Domain.Model
 {
     public class IncidentAssessment
     {
+        #region | Constructor 
         public IncidentAssessment() { }
 
         public IncidentAssessment(string key)
@@ -17,9 +17,13 @@ namespace TotalLoss.Domain.Model
             this.Key = key;
         }
 
+        #endregion
+
+        #region | Properties 
+
         public int Id { get; set; }
 
-        public Configuration Configuration { get; set; }
+        public int IdInsuranceCompany { get; set; }
 
         [Required]
         public string LicensePlate { get; set; }
@@ -28,15 +32,18 @@ namespace TotalLoss.Domain.Model
 
         public string InsuredName { get; set; }
 
-        public string InsuredFone { get; set; }
+        public string InsuredPhone { get; set; }
 
-        public string Provider { get; set; }
-        
-        public string WorkProvider { get; set; }
+        public Company InsuranceCompany { get; set; }
 
-        [Required]        
-        [RegularExpression("^[0-9]{12,14}", ErrorMessage = "O Telefone deve possuir 12 dígitos, no formato DDIDDDFONE EX: 555199990101")]
-        public string WorkProviderFone { get; set; }
+        public TowingCompany TowingCompany { get; set; }
+
+        public TowTruckDriver TowTruckDriver { get; set; }
+
+        public string TowTruckDriverName { get; set; }
+
+        [RegularExpression("^[0-9]{12,14}", ErrorMessage = "O Telefone deve possuir 12 dígitos, no formato DDIDDDFONE EX: 551199990101")]
+        public string TowTruckDriverMobile { get; set; }
 
         public string Key
         {
@@ -58,14 +65,14 @@ namespace TotalLoss.Domain.Model
                         if (Int32.TryParse(resultText, out resultInt))
                             this.Id = resultInt;
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         this.Id = 0;
-                    }                    
+                    }
                 }
             }
         }
-        
+
         public ShortMessageCode ShortMessageCode { get; set; } = ShortMessageCode.NotSend;
 
         public TypeIncidentAssessment Type { get; set; } = TypeIncidentAssessment.None;
@@ -74,16 +81,35 @@ namespace TotalLoss.Domain.Model
 
         public int TotalPoint { get; set; }
 
-        public IList<Category> Categories { get; set; } = new List<Category>();
+        public IList<Question> Answers { get; set; } = new List<Question>();
+
+        public DateTime CreateDate { get; set; }
+
+        #endregion
+
+        #region | Method 
 
         public void Copy(IncidentAssessment inicident)
         {
-            this.LicensePlate = string.IsNullOrEmpty(inicident.LicensePlate) ? this.LicensePlate : inicident.LicensePlate;
-            this.ClaimNumber = string.IsNullOrEmpty(inicident.ClaimNumber) ? this.ClaimNumber : inicident.ClaimNumber;
-            this.InsuredName = string.IsNullOrEmpty(inicident.InsuredName) ? this.InsuredName : inicident.InsuredName;
-            this.InsuredFone = string.IsNullOrEmpty(inicident.InsuredFone) ? this.InsuredFone : inicident.InsuredFone;
-            this.Provider = string.IsNullOrEmpty(inicident.Provider) ? this.Provider : inicident.Provider;
-            this.WorkProvider = string.IsNullOrEmpty(inicident.WorkProvider) ? this.WorkProvider : inicident.WorkProvider;            
+            var configuration = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<IncidentAssessment, IncidentAssessment>()                    
+                   .ForMember(d => d.Id, o => o.Ignore())
+                   .ForMember(d => d.Status, o => o.Ignore())
+                   .ForMember(d => d.Type, o => o.Ignore())
+                   .ForMember(d => d.ShortMessageCode, o => o.Ignore())
+                   .ForMember(d => d.IdInsuranceCompany, o => o.Ignore())
+                   .ForMember(d => d.InsuranceCompany, o => o.Ignore())
+                   .ForMember(d => d.Key, o => o.Ignore())
+                   .ForMember(d => d.CreateDate, o => o.Ignore())
+                   .ForAllMembers(cond => cond.Condition((src, dest, srcMember) => srcMember != null));
+            });
+
+            var mapper = configuration.CreateMapper();
+
+            mapper.Map(inicident, this);
         }
+
+        #endregion
     }
 }

@@ -9,8 +9,8 @@ namespace TotalLoss.Repository
 {
     public class QuestionRepository : BaseRepository, Interface.IQuestionRepository
     {
-        public QuestionRepository(IDbConnection conexao)
-            : base(conexao) { }
+        public QuestionRepository(IDbConnection connection)
+            : base(connection) { }
 
         /// <summary>
         /// Busca todas as Questões cadastradas por Categoria 

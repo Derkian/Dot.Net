@@ -10,6 +10,7 @@ namespace TotalLoss.Domain.Enums
     {
         Created = 0,
         Pending = 1,
-        Finalized = 2
+        Answered = 2,
+        Finalized = 3
     }
 }

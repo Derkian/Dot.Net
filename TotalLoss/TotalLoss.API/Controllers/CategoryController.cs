@@ -31,30 +31,23 @@ namespace TotalLoss.API.Controllers
         #endregion
 
         #region | Actions
-        
+
         [HttpGet]
         [Route("api/Categories/GetCategoriesByCompany/{idCompany}")]
         public async Task<IHttpActionResult> GetCategoriesByCompany(int idCompany)
         {
             IList<Category> listCategory = null;
-            Domain.Model.Configuration request = null;
-            try
-            {             
-                // Cria entidade Configuration
-                request = new Domain.Model.Configuration() { Id = idCompany };
+            Domain.Model.Company request = null;
 
-                // Busca todas Categorias por Companhia informada
-                listCategory = await Task.Run(() => _categoryService.GetCategoriesByCompany(request));
+            // Cria entidade Configuration
+            request = new Domain.Model.Company() { Id = idCompany };
 
-                // Verifica se existem Categorias pela Companhia informada
-                if (listCategory == null)
-                    return NotFound();
-            }
-            catch (System.Exception ex)
-            {
-                // Retorna Json de Erro interno gerado 
-                return InternalServerError(new System.Exception(ex.Message)); 
-            }
+            // Busca todas Categorias por Companhia informada
+            listCategory = await Task.Run(() => _categoryService.GetCategoriesByCompany(request));
+
+            // Verifica se existem Categorias pela Companhia informada
+            if (listCategory == null || listCategory.Count == 0)
+                return NotFound();
 
             // Retorna response com todas Categorias por Campanhia
             return Ok(listCategory);

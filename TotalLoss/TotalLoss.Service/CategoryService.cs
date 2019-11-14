@@ -7,11 +7,11 @@ namespace TotalLoss.Service
 {
     public class CategoryService
     {
-        private ICategoryRepository _categoryRepository;
+        private IWorkRepository _workRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(IWorkRepository workRepository)
         {
-            this._categoryRepository = categoryRepository;
+            this._workRepository = workRepository;
         }
 
         /// <summary>
@@ -19,17 +19,19 @@ namespace TotalLoss.Service
         /// </summary>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public IList<Category> GetCategoriesByCompany(Configuration configuration)
+        public IList<Category> GetCategoriesByCompany(Company company)
         {
             IList<Category> listCategory = null;
+
             try
             {
-                listCategory = _categoryRepository.ListByCompany(configuration);
+                listCategory = _workRepository.CategoryRepository.ListByCompany(company);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+
             return listCategory;
         }
     }

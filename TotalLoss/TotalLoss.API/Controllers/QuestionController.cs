@@ -36,23 +36,16 @@ namespace TotalLoss.API.Controllers
         {
             IList<Question> listQuestion = null;
             Domain.Model.Category request = null;
-            try
-            {
-                // Cria entidade Category
-                request = new Domain.Model.Category() { Id = idCategory };
 
-                // Busca todas Questões por Categoria informada
-                listQuestion = await Task.Run(() => _questionService.GetQuestionsByCategory(request));
+            // Cria entidade Category
+            request = new Domain.Model.Category() { Id = idCategory };
 
-                // Verifica se existem Questões pela Categoria informada
-                if (listQuestion == null)
-                    return NotFound();
-            }
-            catch (System.Exception ex)
-            {
-                // Retorna Json de Erro interno gerado 
-                return InternalServerError(new System.Exception(ex.Message));
-            }
+            // Busca todas Questões por Categoria informada
+            listQuestion = await Task.Run(() => _questionService.GetQuestionsByCategory(request));
+
+            // Verifica se existem Questões pela Categoria informada
+            if (listQuestion == null || listQuestion.Count == 0)
+                return NotFound();
 
             // Retorna response com todas Questões por Categoria
             return Ok(listQuestion);

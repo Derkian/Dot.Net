@@ -1,5 +1,5 @@
 ﻿using System;
-
+using TotalLoss.Domain.Enums;
 using TotalLoss.Domain.Model;
 using TotalLoss.Repository.Interface;
 
@@ -7,33 +7,35 @@ namespace TotalLoss.Service
 {
     public class ConfigurationService
     {
-        private IConfigurationRepository _configurationRepository;
+        private IWorkRepository _workRepository;
 
-        public ConfigurationService(IConfigurationRepository configurationRepository)
+        public ConfigurationService(IWorkRepository workRepository)
         {
-            this._configurationRepository = configurationRepository;
+            this._workRepository = workRepository;
         }
 
         /// <summary>
-        /// Busca a Configuração pertencente aos dados da companhia informada
+        ///  Busca configuração da Companhia por ID e Tipo de Companhia
         /// </summary>
-        /// <param name="login"></param>
-        /// <param name="password"></param>
+        /// <param name="company"></param>
         /// <returns></returns>
-        public Configuration GetAuthenticatedCompany(string login, string password)
+        public InsuranceCompany GetConfiguration(Company company)
         {
-            Configuration configuration = null;
-                                    
+            InsuranceCompany configurationCompany = null;
+
             try
             {
-                configuration = _configurationRepository.FindByAuthenticatedCompany(login, password);
+                if (company.TypeCompany == TypeCompany.InsuranceCompany)
+                    configurationCompany = this._workRepository.ConfigurationRepository.Find(company);
+                else
+                    configurationCompany = this._workRepository.ConfigurationRepository.FindByTowingCompany(company);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
 
-            return configuration;
+            return configurationCompany;            
         }
     }
 }

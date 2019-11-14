@@ -10,19 +10,19 @@ namespace TotalLoss.Service
 {
     public class SalvageCompanyService
     {
-        private ISalvageCompanyRepository _repository;
-        public SalvageCompanyService(ISalvageCompanyRepository repository)
+        private IWorkRepository _workrepository;
+        public SalvageCompanyService(IWorkRepository workRepository)
         {
-            this._repository = repository;
+            this._workrepository = workRepository;
         }
 
-        public IList<SalvageCompany> ListSalvageByCompany(Configuration company)
+        public IList<SalvageCompany> ListSalvageByCompany(Company company)
         {
             IList<SalvageCompany> listSalvage = null;
 
             try
             {
-                listSalvage = _repository.ListSalvageByCompany(company);
+                listSalvage = this._workrepository.SalvageCompanyRepository.ListSalvageByCompany(company);
             }
             catch (Exception ex)
             {
@@ -39,7 +39,7 @@ namespace TotalLoss.Service
 
             try
             {
-                listSalvageLocation = _repository.ListSalvageLocation(salvage);
+                listSalvageLocation = this._workrepository.SalvageCompanyRepository.ListSalvageLocation(salvage);
             }
             catch (Exception ex)
             {

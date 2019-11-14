@@ -8,11 +8,11 @@ namespace TotalLoss.Service
 {
     public class QuestionService
     {
-        private IQuestionRepository _questionRepository;
+        private IWorkRepository _workRepository;
 
-        public QuestionService(IQuestionRepository questionRepository)
+        public QuestionService(IWorkRepository workRepository)
         {
-            this._questionRepository = questionRepository;
+            this._workRepository = workRepository;
         }
         
         /// <summary>
@@ -26,12 +26,13 @@ namespace TotalLoss.Service
             try
             {
                 // Retorna somentes Perguntas que estejam ativas
-                listQuestion = _questionRepository.ListByCategory(category).Where(q => q.Enable == true).ToList();
+                listQuestion = _workRepository.QuestionRepository.ListByCategory(category).Where(q => q.Enable == true).ToList();
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+
             return listQuestion;
         }
     }

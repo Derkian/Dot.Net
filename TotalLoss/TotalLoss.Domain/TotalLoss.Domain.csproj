@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=9.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.9.0.0\lib\net461\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -41,7 +45,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,23 +53,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\CnpjValidationAttribute.cs" />
+    <Compile Include="Attributes\IgnoreLogAttribute.cs" />
+    <Compile Include="Attributes\LogPrimaryKeyAttribute.cs" />
     <Compile Include="Enums\EnumShortMessageCode.cs" />
     <Compile Include="Enums\EnumStatusIncidentAssessment.cs" />
+    <Compile Include="Enums\EnumTypeCompany.cs" />
     <Compile Include="Enums\EnumTypeIncidentAssessment.cs" />
+    <Compile Include="Enums\EnumTypeOperation.cs" />
     <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\Configuration.cs" />
+    <Compile Include="Model\History.cs" />
+    <Compile Include="Model\Company.cs" />
     <Compile Include="Model\IncidentAssessment.cs" />
     <Compile Include="Model\IncidentAssessmentImage.cs" />
+    <Compile Include="Model\InsuranceCompany.cs" />
+    <Compile Include="Model\Pagination.cs" />
     <Compile Include="Model\Question.cs" />
     <Compile Include="Model\SalvageCompany.cs" />
     <Compile Include="Model\Location.cs" />
     <Compile Include="Model\LocationDetail.cs" />
     <Compile Include="Model\ShortMessage.cs" />
+    <Compile Include="Model\TowingCompany.cs" />
+    <Compile Include="Model\TowTruckDriver.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,15 @@
+C:\workingfolder\solerabr\Audatex\TotalLoss\TotalLoss.Domain\bin\Debug\TotalLoss.Domain.dll
+C:\workingfolder\solerabr\Audatex\TotalLoss\TotalLoss.Domain\bin\Debug\TotalLoss.Domain.pdb
+C:\workingfolder\solerabr\Audatex\TotalLoss\TotalLoss.Domain\obj\Debug\TotalLoss.Domain.dll
+C:\workingfolder\solerabr\Audatex\TotalLoss\TotalLoss.Domain\obj\Debug\TotalLoss.Domain.pdb
+C:\workingfolder\solerabr\Audatex\TotalLoss\TotalLoss.Domain\obj\Debug\TotalLoss.Domain.csprojResolveAssemblyReference.cache
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\TotalLoss.Domain.dll
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\TotalLoss.Domain.pdb
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\obj\Debug\TotalLoss.Domain.dll
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\obj\Debug\TotalLoss.Domain.pdb
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\Newtonsoft.Json.dll
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\Newtonsoft.Json.xml
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\AutoMapper.dll
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\AutoMapper.pdb
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\bin\Debug\AutoMapper.xml
+C:\workingfolder\solerabr\Audatex\Sistemas\TotalLoss\TotalLoss.Domain\obj\Debug\TotalLoss.Domain.csprojResolveAssemblyReference.cache

@@ -2,35 +2,42 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using TotalLoss.Domain.Enums;
 using TotalLoss.Domain.Model;
 
 namespace TotalLoss.Repository
 {
-    public class ConfigurationRepository 
+    public class ConfigurationRepository
                     : BaseRepository, Interface.IConfigurationRepository
     {
-        public ConfigurationRepository(IDbConnection conexao)
-            : base(conexao)
-        {
-        }
+        public ConfigurationRepository(IDbConnection connection)
+            : base(connection) { }
 
-        public Configuration Find(int id)
+        public InsuranceCompany Find(Company company)
         {
             try
             {
-                var @param = new { id };                
+                var @param = new { id = company.Id, idTypeCompany = company.TypeCompany };
 
-                Configuration _company = this.Conexao
-                                                .QueryFirst<Configuration>(
+                InsuranceCompany _company = this.Conexao
+                                                .QueryFirstOrDefault<InsuranceCompany>(
                                                         @"SELECT 
-                                                                IDCOMPANY        ID, 
-                                                                NAME             NAME,
-                                                                LIMITTOTALLOSS   LIMITTOTALLOSS                                                                                                                               
-					                                      FROM [COMPANY]
-					                                     WHERE IDCOMPANY = @id"
+                                                                CMP.IDCOMPANY           ID, 
+                                                                CMP.NAME                NAME,
+                                                                CMP.REGISTRATIONNUMBER  CNPJ,
+                                                                CMP.IDTYPECOMPANY       TYPECOMPANY,
+                                                                INS.DESCRIPTION         DESCRIPTION,
+                                                                INS.LIMITTOTALLOSS      LIMITTOTALLOSS,
+                                                                INS.PRIMARYCOLOR        PRIMARYCOLOR,
+                                                                INS.SECONDARYCOLOR      SECONDARYCOLOR,
+                                                                INS.LOGO                IMAGE
+                                                            FROM [COMPANY] CMP WITH(NOLOCK)
+                                                           INNER JOIN INSURANCECOMPANY INS WITH(NOLOCK)
+                                                              ON CMP.IDCOMPANY = INS.IDINSURANCECOMPANY
+                                                           WHERE CMP.IDCOMPANY = @id
+                                                             AND CMP.IDTYPECOMPANY = @idTypeCompany"
                                                         ,
                                                         param: param, transaction: this.Transacao);
-
 
                 return _company;
             }
@@ -40,32 +47,35 @@ namespace TotalLoss.Repository
             }
         }
 
-        public Configuration FindByAuthenticatedCompany(string login, string password)
+        public InsuranceCompany FindByTowingCompany(Company company)
         {
             try
             {
-                var @parameters = new { login , password };
+                var @param = new { id = company.Id, idTypeCompany = company.TypeCompany };
 
-                Configuration _configuration = this.Conexao
-                                                        .QueryFirstOrDefault<Configuration>
-                                                        (
-                                                            @"SELECT 
-	                                                            C.IDCOMPANY				ID,
-	                                                            C.[NAME]				NAME,
-	                                                            C.REGISTRATIONNUMBER	CNPJ,
-	                                                            C.PRIMARYCOLOR			PRIMARYCOLOR,
-	                                                            C.SECONDARYCOLOR		SECONDARYCOLOR,
-	                                                            CAST(C.LOGO AS VARCHAR(MAX)) LOGO     
-                                                            FROM COMPANY C
-                                                            INNER JOIN [USER] U
-	                                                            ON U.IDCOMPANY = C.IDCOMPANY
-					                                        WHERE U.LOGIN = @login
-                                                              AND U.PASSWORD = @password"
-                                                            ,
-                                                            param: parameters, transaction: this.Transacao
-                                                        );
-                
-                return _configuration;
+                InsuranceCompany _company = this.Conexao
+                                                .QueryFirstOrDefault<InsuranceCompany>(
+                                                        @"SELECT 
+		                                                        CMP.IDCOMPANY           ID, 
+		                                                        CMP.NAME                NAME,
+		                                                        CMP.REGISTRATIONNUMBER  CNPJ,
+		                                                        CMP.IDTYPECOMPANY       TYPECOMPANY,
+		                                                        INS.DESCRIPTION         DESCRIPTION,
+		                                                        INS.LIMITTOTALLOSS      LIMITTOTALLOSS,
+		                                                        INS.PRIMARYCOLOR        PRIMARYCOLOR,
+		                                                        INS.SECONDARYCOLOR      SECONDARYCOLOR,
+		                                                        INS.LOGO                IMAGE
+                                                            FROM [COMPANY] CMP WITH(NOLOCK)
+                                                        INNER JOIN [dbo].[TowingCompany] TOW WITH(NOLOCK)
+                                                           ON CMP.IDCOMPANY = TOW.IdTowingCompany
+                                                        INNER JOIN [INSURANCECOMPANY] INS WITH(NOLOCK)
+                                                           ON TOW.IdInsuranceCompany = INS.IdInsuranceCompany
+                                                        WHERE CMP.IDCOMPANY = @id
+                                                          AND CMP.IDTYPECOMPANY = @idTypeCompany"
+                                                        ,
+                                                        param: param, transaction: this.Transacao);
+
+                return _company;
             }
             catch (Exception ex)
             {

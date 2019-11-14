@@ -9,7 +9,7 @@ namespace TotalLoss.Repository.Interface
 {
     public interface ISalvageCompanyRepository : IBaseRepository
     {
-        IList<SalvageCompany> ListSalvageByCompany(Configuration company);
+        IList<SalvageCompany> ListSalvageByCompany(Company company);
 
         IList<Location> ListSalvageLocation(SalvageCompany salvage);
     }

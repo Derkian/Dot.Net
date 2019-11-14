@@ -16,6 +16,10 @@ namespace TotalLoss.Domain.Model
 
         public string ZipCode { get; set; }
 
+        public string Longitude { get; set; }
+
+        public string Latitude { get; set; }
+
         public string Email { get; set; }
 
         public string Fone { get; set; }
@@ -23,5 +27,7 @@ namespace TotalLoss.Domain.Model
         public string Fax { get; set; }
 
         public string Manager { get; set; }
+
+        
     }
 }

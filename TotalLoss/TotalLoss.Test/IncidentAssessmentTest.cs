@@ -21,23 +21,23 @@ namespace TotalLoss.Test
         {
             SqlConnection _conexao = new SqlConnection("Data Source=10.33.170.230;Initial Catalog=AudaFNOL_HM;Integrated Security=False;User Id=AudaFnol_USR_HM;Password=Audatex1;");
             IncidentAssessmentRepository _repository = new IncidentAssessmentRepository(_conexao);
-            _service = new IncidentAssessmentService(_repository, "", "", "");
+            //_service = new IncidentAssessmentService(_repository, "", "", "");
 
-            _model = new IncidentAssessment()
-            {
-                ClaimNumber = _guid,
-                Configuration = new Configuration()
-                {
-                    Id = 1,
-                    Name = "Allianz"
-                },
-                InsuredFone = "(11)9876-9865",
-                InsuredName = "Simplicio",
-                LicensePlate = "ABC-4321",
-                Provider = "Mundial",
-                WorkProvider = "Flavio Ota",
-                WorkProviderFone = "(11)93216-9874"
-            };
+            //_model = new IncidentAssessment()
+            //{
+            //    ClaimNumber = _guid,
+            //    Configuration = new Configuration()
+            //    {
+            //        Id = 1,
+            //        Name = "Allianz"
+            //    },
+            //    InsuredFone = "(11)9876-9865",
+            //    InsuredName = "Simplicio",
+            //    LicensePlate = "ABC-4321",
+            //    Provider = "Mundial",
+            //    WorkProvider = "Flavio Ota",
+            //    WorkProviderFone = "(11)93216-9874"
+            //};
         }
 
         [TestMethod]
