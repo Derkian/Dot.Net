@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{5B9F4C51-2A96-4E78-BCC9-702054AB989E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{BFF67959-38E1-4D9F-9311-E6F421E99478}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvisoFacil.Auth", "AvisoFacil.Auth.Domain\AvisoFacil.Auth.csproj", "{D2DC3547-6E48-4D7B-86A9-9F59072E7636}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvisoFacil.Auth.API", "AvisoFacil.Auth.API\AvisoFacil.Auth.API.csproj", "{DA85D9D5-D9F3-4BC6-8C3C-28CE652B8060}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2DC3547-6E48-4D7B-86A9-9F59072E7636}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2DC3547-6E48-4D7B-86A9-9F59072E7636}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2DC3547-6E48-4D7B-86A9-9F59072E7636}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2DC3547-6E48-4D7B-86A9-9F59072E7636}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA85D9D5-D9F3-4BC6-8C3C-28CE652B8060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA85D9D5-D9F3-4BC6-8C3C-28CE652B8060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA85D9D5-D9F3-4BC6-8C3C-28CE652B8060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA85D9D5-D9F3-4BC6-8C3C-28CE652B8060}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D2DC3547-6E48-4D7B-86A9-9F59072E7636} = {5B9F4C51-2A96-4E78-BCC9-702054AB989E}
+		{DA85D9D5-D9F3-4BC6-8C3C-28CE652B8060} = {BFF67959-38E1-4D9F-9311-E6F421E99478}
+	EndGlobalSection
+EndGlobal
