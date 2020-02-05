@@ -122,11 +122,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Desenvolvimento\\Identity\\src\\Client\\Client.csproj",
+      "projectUniqueName": "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\Client\\Client.csproj",
       "projectName": "Client",
-      "projectPath": "D:\\Desenvolvimento\\Identity\\src\\Client\\Client.csproj",
+      "projectPath": "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\Client\\Client.csproj",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\Desenvolvimento\\Identity\\src\\Client\\obj\\",
+      "outputPath": "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",

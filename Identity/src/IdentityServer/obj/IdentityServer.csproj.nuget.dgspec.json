@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Desenvolvimento\\Identity\\src\\IdentityServer\\IdentityServer.csproj": {}
+    "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\IdentityServer\\IdentityServer.csproj": {}
   },
   "projects": {
-    "D:\\Desenvolvimento\\Identity\\src\\IdentityServer\\IdentityServer.csproj": {
+    "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\IdentityServer\\IdentityServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Desenvolvimento\\Identity\\src\\IdentityServer\\IdentityServer.csproj",
+        "projectUniqueName": "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\IdentityServer\\IdentityServer.csproj",
         "projectName": "IdentityServer",
-        "projectPath": "D:\\Desenvolvimento\\Identity\\src\\IdentityServer\\IdentityServer.csproj",
+        "projectPath": "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\IdentityServer\\IdentityServer.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\Desenvolvimento\\Identity\\src\\IdentityServer\\obj\\",
+        "outputPath": "D:\\Desenvolvimento\\Dot.Net\\Identity\\src\\IdentityServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
