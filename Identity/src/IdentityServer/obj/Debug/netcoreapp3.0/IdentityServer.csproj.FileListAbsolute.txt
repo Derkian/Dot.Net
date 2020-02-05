@@ -71,7 +71,6 @@ D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\bin\Debug\netcoreapp3.0\S
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.csprojAssemblyReference.cache
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\staticwebassets\IdentityServer.StaticWebAssets.Manifest.cache
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\staticwebassets\IdentityServer.StaticWebAssets.xml
-D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.MvcApplicationPartsAssemblyInfo.cache
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.RazorAssemblyInfo.cache
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.RazorAssemblyInfo.cs
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.AssemblyInfoInputs.cache
@@ -103,3 +102,7 @@ D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\I
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.csproj.CopyComplete
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.dll
 D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.pdb
+D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\bin\Debug\netcoreapp3.0\IdentityModel.AspNetCore.OAuth2Introspection.dll
+D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\bin\Debug\netcoreapp3.0\IdentityServer4.AccessTokenValidation.dll
+D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Desenvolvimento\Dot.Net\Identity\src\IdentityServer\obj\Debug\netcoreapp3.0\IdentityServer.MvcApplicationPartsAssemblyInfo.cache

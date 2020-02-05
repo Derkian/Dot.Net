@@ -43,6 +43,10 @@ namespace Web
                     options.ResponseType = "code";
 
                     options.SaveTokens = true;
+
+                    //solicitando informações adicionais
+                    options.Scope.Add("api1");
+                    options.Scope.Add("offline_access");
                 });
         }
 

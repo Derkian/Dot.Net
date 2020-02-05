@@ -23,11 +23,32 @@ namespace IdentityServer
             // uncomment, if you want to add an MVC-based UI
             services.AddControllersWithViews();
 
+            services.AddAuthentication("Bearer")
+                    .AddIdentityServerAuthentication(options =>
+                    {
+                        options.Authority = "http://localhost:5000";
+                        options.RequireHttpsMetadata = false;
+
+                        options.ApiName = "api1";
+                    });
+
+                        services.AddCors(options =>
+                        {
+                            // this defines a CORS policy called "default"
+                            options.AddPolicy("default", policy =>
+                            {
+                                policy.WithOrigins("http://localhost:5003")
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                            });
+                        });
+
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.Ids)
                 .AddInMemoryApiResources(Config.Apis)
                 .AddInMemoryClients(Config.Clients)
                 .AddTestUsers(TestUsers.Users);
+
 
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
@@ -39,6 +60,8 @@ namespace IdentityServer
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("default");
 
             // uncomment if you want to add MVC
             app.UseStaticFiles();
