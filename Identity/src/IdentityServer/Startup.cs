@@ -119,7 +119,7 @@ namespace IdentityServer
         public void Configure(IApplicationBuilder app)
         {
             // this will do the initial DB population
-            InitializeDatabase(app);
+            //InitializeDatabase(app);
 
             if (Environment.IsDevelopment())
             {
