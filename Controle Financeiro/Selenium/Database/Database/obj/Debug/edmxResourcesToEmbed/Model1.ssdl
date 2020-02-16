@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MoneyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Fundo">
+    <Key>
+      <PropertyRef Name="FundoID" />
+    </Key>
+    <Property Name="FundoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Categoria" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Nome" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Tipo" Type="varchar" MaxLength="200" />
+    <Property Name="RentabilidadeBruta1Ano" Type="money" />
+    <Property Name="RentabilidadeLiquida1Ano" Type="money" />
+    <Property Name="InvestimentoMinimo" Type="money" />
+    <Property Name="Liquidez" Type="varchar" MaxLength="50" />
+    <Property Name="IR" Type="money" />
+    <Property Name="TaxaAdmAno" Type="money" />
+    <Property Name="TaxaCustodiaAno" Type="money" />
+    <Property Name="Emissor" Type="varchar" MaxLength="200" />
+    <Property Name="Corretora" Type="varchar" MaxLength="500" />
+    <Property Name="Distribuidor" Type="varchar" MaxLength="500" />
+    <Property Name="Gestor" Type="varchar" MaxLength="500" />
+    <Property Name="Administrador" Type="varchar" MaxLength="500" />
+    <Property Name="URL" Type="varchar" MaxLength="5000" />
+  </EntityType>
+  <EntityType Name="Historico">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FundoID" Type="int" Nullable="false" />
+    <Property Name="Data" Type="date" Nullable="false" />
+    <Property Name="Rendimento" Type="money" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Historico_Historico">
+    <End Role="Fundo" Type="Self.Fundo" Multiplicity="1" />
+    <End Role="Historico" Type="Self.Historico" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Fundo">
+        <PropertyRef Name="FundoID" />
+      </Principal>
+      <Dependent Role="Historico">
+        <PropertyRef Name="FundoID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MoneyModelStoreContainer">
+    <EntitySet Name="Fundo" EntityType="Self.Fundo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Historico" EntityType="Self.Historico" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Historico_Historico" Association="Self.FK_Historico_Historico">
+      <End Role="Fundo" EntitySet="Fundo" />
+      <End Role="Historico" EntitySet="Historico" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MoneyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="MoneyEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Fundo" EntityType="MoneyModel.Fundo" />
+    <EntitySet Name="Historico" EntityType="MoneyModel.Historico" />
+    <AssociationSet Name="FK_Historico_Historico" Association="MoneyModel.FK_Historico_Historico">
+      <End Role="Fundo" EntitySet="Fundo" />
+      <End Role="Historico" EntitySet="Historico" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Fundo">
+    <Key>
+      <PropertyRef Name="FundoID" />
+    </Key>
+    <Property Name="FundoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Categoria" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Nome" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Tipo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="RentabilidadeBruta1Ano" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="RentabilidadeLiquida1Ano" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="InvestimentoMinimo" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Liquidez" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IR" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="TaxaAdmAno" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="TaxaCustodiaAno" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Emissor" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Corretora" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Distribuidor" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Gestor" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Administrador" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="URL" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Historico" Relationship="MoneyModel.FK_Historico_Historico" FromRole="Fundo" ToRole="Historico" />
+  </EntityType>
+  <EntityType Name="Historico">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FundoID" Type="Int32" Nullable="false" />
+    <Property Name="Data" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Rendimento" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <NavigationProperty Name="Fundo" Relationship="MoneyModel.FK_Historico_Historico" FromRole="Historico" ToRole="Fundo" />
+  </EntityType>
+  <Association Name="FK_Historico_Historico">
+    <End Type="MoneyModel.Fundo" Role="Fundo" Multiplicity="1" />
+    <End Type="MoneyModel.Historico" Role="Historico" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Fundo">
+        <PropertyRef Name="FundoID" />
+      </Principal>
+      <Dependent Role="Historico">
+        <PropertyRef Name="FundoID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

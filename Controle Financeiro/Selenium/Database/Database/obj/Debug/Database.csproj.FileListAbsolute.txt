@@ -1,0 +1,12 @@
+D:\Paiva\Selenium\Database\Database\bin\Debug\Database.dll.config
+D:\Paiva\Selenium\Database\Database\bin\Debug\Database.dll
+D:\Paiva\Selenium\Database\Database\bin\Debug\Database.pdb
+D:\Paiva\Selenium\Database\Database\bin\Debug\EntityFramework.dll
+D:\Paiva\Selenium\Database\Database\bin\Debug\EntityFramework.SqlServer.dll
+D:\Paiva\Selenium\Database\Database\bin\Debug\EntityFramework.xml
+D:\Paiva\Selenium\Database\Database\bin\Debug\EntityFramework.SqlServer.xml
+D:\Paiva\Selenium\Database\Database\obj\Debug\Database.csproj.CoreCompileInputs.cache
+D:\Paiva\Selenium\Database\Database\obj\Debug\Database.csproj.CopyComplete
+D:\Paiva\Selenium\Database\Database\obj\Debug\Database.dll
+D:\Paiva\Selenium\Database\Database\obj\Debug\Database.pdb
+D:\Paiva\Selenium\Database\Database\obj\Debug\Database.csprojAssemblyReference.cache
