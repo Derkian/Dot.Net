@@ -60,15 +60,22 @@ namespace ConsoleApp1
                 var aParams = new object[] { contas };
                 object locker = new object();
 
-                Parallel.ForEach(classes, classe =>
+                foreach (var classe in classes)
                 {
                     var imported = (List<Extrato>)classe.GetMethod("Sync").Invoke(null, aParams);
 
-                    lock (locker)
-                    {
-                        extratos.AddRange(imported);
-                    }
-                });
+                    extratos.AddRange(imported);
+                }
+
+                //Parallel.ForEach(classes, classe =>
+                //{
+                //    var imported = (List<Extrato>)classe.GetMethod("Sync").Invoke(null, aParams);
+
+                //    lock (locker)
+                //    {
+                //        extratos.AddRange(imported);
+                //    }
+                //});
 
                 if (extratos.Count > 0)
                 {

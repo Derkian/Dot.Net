@@ -103,7 +103,7 @@ public static class Itau
                                 if (extrato.descricao == "SALDO DO DIA")
                                     extrato.saldo = valor;
                                 else if (lancamento["indicadorOperacao"].ToString().ToUpper() == "DEBITO")
-                                    extrato.debito = valor;
+                                    extrato.debito = Math.Abs(valor) * -1;
                                 else
                                     extrato.credito = valor;
 
