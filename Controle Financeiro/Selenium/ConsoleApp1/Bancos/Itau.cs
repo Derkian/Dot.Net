@@ -59,6 +59,8 @@ public static class Itau
 
                 UI.ClickWithJavascript(driver, executor, By.Id("acessar"));
                 UI.WaitPageLoad(driver);
+
+                
                 UI.Wait(5);
 
 
@@ -67,7 +69,7 @@ public static class Itau
                 // Recupera o JSON dos lançamentos
                 // ------------------------------------------------------------------------------------------------------------------------------
 
-                var url = "https://internetpf1.itau.com.br/router-app/router";
+                var url = driver.Url.Replace("#30horas","");
                 var cookies = UI.GetCookies(executor);
                 var xauthtoken = cookies.First(x => x.Key == "X-AUTH-TOKEN").Value;
                 var op = driver.FindElement(By.Id("VerExtrato")).GetAttribute("data-op");
