@@ -80,43 +80,43 @@ public static class Personalite_MasterCard
                 var op2 = html.Substring(0, html.IndexOf("\"")); // 15 dias, não vai usar
 
                 var json = UI.GetRequestJson(HttpMethod.Post, url, xauthtoken, op2);
-                var lancamentos = json["object"]["data"];
+                var dados = json["object"]["data"];
 
-                foreach (var faturas in lancamentos)
+                foreach (var faturas in dados)
                 {
                     var fatura = faturas["faturas"];
 
-                    foreach (var fat in fatura)
+                    foreach (var faturaFechada in fatura)
                     {
-                        if (!UI.JsonNullOrEmpty(fat["status"]))
+                        if (!UI.JsonNullOrEmpty(faturaFechada["status"]))
                         {
-                            if (fat["status"].ToString().Equals("fechada"))
+                            if (faturaFechada["status"].ToString().Equals("fechada"))
                             {
-                                var dataFechamentoFatura = DateTime.ParseExact(fat["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                                var dataVencimentoFatura = DateTime.ParseExact(fat["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                var dataFechamentoFatura = DateTime.ParseExact(faturaFechada["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                var dataVencimentoFatura = DateTime.ParseExact(faturaFechada["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
                                 if (DateTime.Now > dataFechamentoFatura &&  DateTime.Now < dataVencimentoFatura)
                                 {
-                                    var titularidades = fat["lancamentosNacionais"]["titularidades"];
+                                    var titularidades = faturaFechada["lancamentosNacionais"]["titularidades"];
 
                                     foreach (var titularidade in titularidades)
                                     {
-                                        var lancamento = titularidade["lancamentos"];
+                                        var lancamentos = titularidade["lancamentos"];
 
-                                        foreach (var item in lancamento)
+                                        foreach (var lancamento in lancamentos)
                                         {
-                                            var data = DateTime.ParseExact(item["data"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                            var data = DateTime.ParseExact(lancamento["data"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
                                             var extrato = new Extrato();
                                             extrato.conta = conta.nome;
                                             extrato.data = data;
-                                            extrato.descricao = ExtratoHelper.GetDescricao(item["descricao"].ToString());
+                                            extrato.descricao = ExtratoHelper.GetDescricao(lancamento["descricao"].ToString());
 
                                             if (!string.IsNullOrEmpty(extrato.descricao))
                                             {
-                                                var valor = decimal.Parse(item["valor"].ToString(), NumberStyles.Currency, cultureBR);
+                                                var valor = decimal.Parse(lancamento["valor"].ToString(), NumberStyles.Currency, cultureBR);
 
-                                                if (item["sinalValor"].ToString().ToUpper() == "+")
+                                                if (lancamento["sinalValor"].ToString().ToUpper() == "+")
                                                     extrato.debito = Math.Abs(valor) * -1;
                                                 else
                                                     extrato.credito = valor;
