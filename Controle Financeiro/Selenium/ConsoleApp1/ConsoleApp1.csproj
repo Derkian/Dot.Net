@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bancos\Bradesco.cs" />
+    <Compile Include="Bancos\Personalite_MasterCard.cs" />
     <Compile Include="Bancos\Itau.cs" />
     <Compile Include="Bancos\Master_Credicard_Itau.cs" />
     <Compile Include="Bancos\old\Citibank_PF_CC.cs" />
