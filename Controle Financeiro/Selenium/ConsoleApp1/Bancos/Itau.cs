@@ -114,6 +114,13 @@ public static class Itau
                         }
                     }
                 }
+
+                UI.Click(driver, By.Id("linkSairHeader")); // Sair
+                UI.WaitPageLoad(driver);
+                UI.Wait(2);
+
+                UI.Click(driver, By.XPath("//*[@id=\"telaSair\"]/div/div/div[1]/section/div/div[2]/a")); // Confirmar
+                UI.WaitPageLoad(driver);
             }
             catch (Exception ex)
             {
