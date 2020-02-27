@@ -95,7 +95,7 @@ public static class Personalite_MasterCard
                                 var dataFechamentoFatura = DateTime.ParseExact(fat["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                 var dataVencimentoFatura = DateTime.ParseExact(fat["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                                if (dataFechamentoFatura > DateTime.Now && dataVencimentoFatura < DateTime.Now)
+                                if (DateTime.Now > dataFechamentoFatura &&  DateTime.Now < dataVencimentoFatura)
                                 {
                                     var titularidades = fat["lancamentosNacionais"]["titularidades"];
 
