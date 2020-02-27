@@ -13,7 +13,7 @@ public static class Personalite_MasterCard
         var extratos = new List<Extrato>();
         var cultureBR = new CultureInfo("pt-BR");
 
-        foreach (var conta in (from a in contas where a.classe.ToUpper() == "PERSONALITE_MASTERCARD" select a).ToList())
+        foreach (var conta in (from a in contas where a.classe.ToUpper(CultureInfo.InvariantCulture) == "PERSONALITE_MASTERCARD" select a).ToList())
         {
             IWebDriver driver = null;
 
@@ -72,12 +72,12 @@ public static class Personalite_MasterCard
                 var xauthtoken = cookies.First(x => x.Key == "X-AUTH-TOKEN").Value;
                 var op = driver.FindElement(By.XPath("/html/body/header/div[3]/nav/ul/li/div/div/div[2]/ul[2]/li[1]/a")).GetAttribute("data-op");
 
-                op = op.Substring(0, op.IndexOf("IT"));
+                op = op.Substring(0, op.IndexOf("IT", StringComparison.InvariantCulture));
 
                 string html = UI.GetRequestHtml(HttpMethod.Post, url, xauthtoken, op);
-                html = html.Substring(html.IndexOf("self.init"));
-                html = html.Substring(html.IndexOf("url") + 6);
-                var op2 = html.Substring(0, html.IndexOf("\"")); // 15 dias, não vai usar
+                html = html.Substring(html.IndexOf("self.init", StringComparison.InvariantCulture));
+                html = html.Substring(html.IndexOf("url", StringComparison.InvariantCulture) + 6);
+                var op2 = html.Substring(0, html.IndexOf("\"", StringComparison.InvariantCulture)); // 15 dias, não vai usar
 
                 var json = UI.GetRequestJson(HttpMethod.Post, url, xauthtoken, op2);
                 var dados = json["object"]["data"];
@@ -90,12 +90,12 @@ public static class Personalite_MasterCard
                     {
                         if (!UI.JsonNullOrEmpty(faturaFechada["status"]))
                         {
-                            if (faturaFechada["status"].ToString().Equals("fechada"))
+                            if (faturaFechada["status"].ToString().Equals("fechada", StringComparison.InvariantCulture))
                             {
                                 var dataFechamentoFatura = DateTime.ParseExact(faturaFechada["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                 var dataVencimentoFatura = DateTime.ParseExact(faturaFechada["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                                if (DateTime.Now > dataFechamentoFatura &&  DateTime.Now < dataVencimentoFatura)
+                                if (DateTime.Now > dataFechamentoFatura && DateTime.Now < dataVencimentoFatura)
                                 {
                                     var titularidades = faturaFechada["lancamentosNacionais"]["titularidades"];
 
@@ -116,7 +116,7 @@ public static class Personalite_MasterCard
                                             {
                                                 var valor = decimal.Parse(lancamento["valor"].ToString(), NumberStyles.Currency, cultureBR);
 
-                                                if (lancamento["sinalValor"].ToString().ToUpper() == "+")
+                                                if (lancamento["sinalValor"].ToString().ToUpper(CultureInfo.InvariantCulture) == "+")
                                                     extrato.debito = Math.Abs(valor) * -1;
                                                 else
                                                     extrato.credito = valor;
