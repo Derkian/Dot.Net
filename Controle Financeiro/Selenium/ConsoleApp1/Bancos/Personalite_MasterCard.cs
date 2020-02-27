@@ -62,7 +62,7 @@ public static class Personalite_MasterCard
 
 
                 UI.Wait(5);
-                               
+
                 // ------------------------------------------------------------------------------------------------------------------------------
                 // Recupera o JSON dos lançamentos
                 // ------------------------------------------------------------------------------------------------------------------------------
@@ -92,9 +92,10 @@ public static class Personalite_MasterCard
                         {
                             if (fat["status"].ToString().Equals("fechada"))
                             {
-                                var dataFatura = DateTime.ParseExact(fat["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                var dataFechamentoFatura = DateTime.ParseExact(fat["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                var dataVencimentoFatura = DateTime.ParseExact(fat["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                                if (dataFatura >= conta.ultima_atulizacao)
+                                if (dataFechamentoFatura > DateTime.Now && dataVencimentoFatura < DateTime.Now)
                                 {
                                     var titularidades = fat["lancamentosNacionais"]["titularidades"];
 
