@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bancos\Bradesco.cs" />
+    <Compile Include="Bancos\Nubank.cs" />
     <Compile Include="Bancos\Personalite_MasterCard.cs" />
     <Compile Include="Bancos\Itau.cs" />
     <Compile Include="Bancos\Master_Credicard_Itau.cs" />
@@ -96,6 +97,9 @@
     <Compile Include="Yubb\Renda_Fixa\Yubb_Tesouro_Direto.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
