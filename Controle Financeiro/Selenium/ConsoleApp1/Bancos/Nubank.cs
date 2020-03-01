@@ -40,116 +40,92 @@ public static class Nubank
                 UI.Click(driver, By.ClassName("bills"));
 
                 UI.Wait(1.5);
-
-                //IList<IWebElement> tabs = driver.FindElements(By.TagName("md-tab"));
-
-                //foreach (var item in tabs)
-                //{
-                //    string atributeClass = item.GetAttribute("class");
-
-                //    if (atributeClass.ToUpper().Contains("ACTIVE"))
-                //    {
-                //        ToBreak = true;
-
-                //        IWebElement elementMonth = item.FindElement(By.TagName("h3"));
-
-
-
-
-                //    }
-                //}
-                IList<IWebElement> tbodys = new List<IWebElement>();
-
                 
-                try
-                {
-                    if (tbodys.Count == 0)
-                    {
-                        tbodys = driver.FindElement(By.XPath("//*[@id=\"content_tab_00E\"]/div/div[2]/div[3]")).FindElements(By.TagName("div"));
-                    }
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                IList<IWebElement> chargesList = new List<IWebElement>();
 
-                foreach (var tbody in tbodys)
+                chargesList = driver.FindElements(By.ClassName("charges-list"));                                    
+
+                foreach (var charge in chargesList)
                 {
                     if (ToBreak) break;
+                    var tbodys = charge.FindElements(By.TagName("div"));
 
-                    try
+                    foreach (var tbody in tbodys)
                     {
-                        #region DATA
-                        IWebElement elementTime = tbody.FindElement(By.ClassName("time"));
-                        IWebElement elementCell = elementTime.FindElement(By.ClassName("cell"));
-                        IWebElement elementSpan = elementCell.FindElement(By.TagName("span"));
-
-                        DateTime data = DateTime.Now;
-
-                        var textoData = elementSpan.Text.Split(' ');
-                        switch (textoData[1].ToUpper())
+                        try
                         {
-                            case "JAN":
-                                data = new DateTime(DateTime.Now.Year, 1, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "FEV":
-                                data = new DateTime(DateTime.Now.Year, 2, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "MAR":
-                                data = new DateTime(DateTime.Now.Year, 3, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "ABR":
-                                data = new DateTime(DateTime.Now.Year, 4, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "MAI":
-                                data = new DateTime(DateTime.Now.Year, 5, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "JUN":
-                                data = new DateTime(DateTime.Now.Year, 6, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "JUL":
-                                data = new DateTime(DateTime.Now.Year, 7, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "AGO":
-                                data = new DateTime(DateTime.Now.Year, 8, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "SET":
-                                data = new DateTime(DateTime.Now.Year, 9, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "OUT":
-                                data = new DateTime(DateTime.Now.Year, 10, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "NOV":
-                                data = new DateTime(DateTime.Now.Year, 11, Convert.ToInt32(textoData[0]));
-                                break;
-                            case "DEZ":
-                                data = new DateTime(DateTime.Now.Year, 12, Convert.ToInt32(textoData[0]));
-                                break;
-                        }
-                        #endregion
+                            #region DATA
+                            IWebElement elementTime = tbody.FindElement(By.ClassName("time"));
+                            IWebElement elementCell = elementTime.FindElement(By.ClassName("cell"));
+                            IWebElement elementSpan = elementCell.FindElement(By.TagName("span"));
 
-                        IWebElement elementChargeData = tbody.FindElement(By.ClassName("charge-data"));
-                        IWebElement elementdescription = elementChargeData.FindElement(By.ClassName("description"));
+                            DateTime data = DateTime.Now;
 
-                        IWebElement elementamount = tbody.FindElement(By.ClassName("amount"));
-
-                        var extrato = new Extrato();
-                        extrato.conta = conta.nome;
-                        extrato.data = data;
-                        extrato.descricao = ExtratoHelper.GetDescricao(elementdescription.Text);
-
-                        if (!string.IsNullOrEmpty(extrato.descricao))
-                        {
-                            var valor = decimal.Parse(elementamount.Text.Replace("R$", ""), NumberStyles.Currency, cultureBR);
-
-                            if (valor > 0)
+                            var textoData = elementSpan.Text.Split(' ');
+                            switch (textoData[1].ToUpper())
                             {
-                                extrato.debito = Math.Abs(valor) * -1;
-                                ExtratoHelper.AddExtrato(ref extratos, extrato);
+                                case "JAN":
+                                    data = new DateTime(DateTime.Now.Year, 1, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "FEV":
+                                    data = new DateTime(DateTime.Now.Year, 2, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "MAR":
+                                    data = new DateTime(DateTime.Now.Year, 3, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "ABR":
+                                    data = new DateTime(DateTime.Now.Year, 4, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "MAI":
+                                    data = new DateTime(DateTime.Now.Year, 5, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "JUN":
+                                    data = new DateTime(DateTime.Now.Year, 6, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "JUL":
+                                    data = new DateTime(DateTime.Now.Year, 7, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "AGO":
+                                    data = new DateTime(DateTime.Now.Year, 8, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "SET":
+                                    data = new DateTime(DateTime.Now.Year, 9, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "OUT":
+                                    data = new DateTime(DateTime.Now.Year, 10, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "NOV":
+                                    data = new DateTime(DateTime.Now.Year, 11, Convert.ToInt32(textoData[0]));
+                                    break;
+                                case "DEZ":
+                                    data = new DateTime(DateTime.Now.Year, 12, Convert.ToInt32(textoData[0]));
+                                    break;
+                            }
+                            #endregion
+
+                            IWebElement elementChargeData = tbody.FindElement(By.ClassName("charge-data"));
+                            IWebElement elementdescription = elementChargeData.FindElement(By.ClassName("description"));
+
+                            IWebElement elementamount = tbody.FindElement(By.ClassName("amount"));
+
+                            var extrato = new Extrato();
+                            extrato.conta = conta.nome;
+                            extrato.data = data;
+                            extrato.descricao = ExtratoHelper.GetDescricao(elementdescription.Text);
+
+                            if (!string.IsNullOrEmpty(extrato.descricao))
+                            {
+                                var valor = decimal.Parse(elementamount.Text.Replace("R$", ""), NumberStyles.Currency, cultureBR);
+
+                                if (valor > 0)
+                                {
+                                    extrato.debito = Math.Abs(valor) * -1;
+                                    ExtratoHelper.AddExtrato(ref extratos, extrato);
+                                }
                             }
                         }
+                        catch { }
                     }
-                    catch { }
                 }
 
                 UI.Click(driver, By.XPath("/html/body/navigation-base/navigation-menu/div/nav/section/ul[1]/li[3]/a")); // Sair
