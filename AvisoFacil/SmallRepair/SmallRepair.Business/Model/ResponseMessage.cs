@@ -25,7 +25,7 @@ namespace SmallRepair.Business.Model
             return new ResponseMessage<TEntity>(true, value, null);
         }
 
-        public static ResponseMessage<TEntity> Fault(IList<string> error)
+        public static ResponseMessage<TEntity> Fault(params string[] error)
         {
             return new ResponseMessage<TEntity>(false, default(TEntity), error);
         }

@@ -8,7 +8,7 @@ namespace SmallRepair.Management.Model
     {
         public int IdAdditionalService { get; set; }
 
-        public int IdCustomer { get; set; }
+        public string IdCustomer { get; set; }
 
         public Customer Customer { get; set; }
 

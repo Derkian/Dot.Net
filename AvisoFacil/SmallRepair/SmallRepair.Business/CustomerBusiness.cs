@@ -7,23 +7,34 @@ using System.Text;
 
 namespace SmallRepair.Business
 {
-    public class CustomerBusiness
+    public class CustomerBusiness : BaseBussiness
     {
-        private readonly RepositoryEntity _repository;
-
-        public CustomerBusiness(RepositoryEntity repositoryEntity)
+        public CustomerBusiness(RepositoryEntity repository) : base(repository)
         {
-            _repository = repositoryEntity;
         }
 
-        public IList<AdditionalService> GetAdditionalServices(int idCustomer)
+        //private readonly RepositoryEntity _repository;
+
+        //public CustomerBusiness(RepositoryEntity repositoryEntity)
+        //{
+        //    _repository = repositoryEntity;
+        //}
+
+        public IList<AdditionalService> GetAdditionalServices(string idCustomer)
         {
             return _repository
                     .All<AdditionalService>(a => a.IdCustomer == idCustomer)
                     .ToList();
         }
 
-        public Customer GetCustomer(int idCustomer)
+        public IList<ServiceValue> GetServiceValues(string idCustomer)
+        {
+            return _repository
+                    .All<ServiceValue>(a => a.IdCustomer == idCustomer)
+                    .ToList();
+        }
+
+        public Customer GetCustomer(string idCustomer)
         {
             return _repository.Find<Customer>(idCustomer);
         }

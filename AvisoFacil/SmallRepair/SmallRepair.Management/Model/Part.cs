@@ -8,7 +8,7 @@ namespace SmallRepair.Management.Model
         public int IdPart { get; set; }
 
         public int IdAssessment { get; set; }
-
+                
         public Assessment Assessment { get; set; }
 
         public string Code { get; set; }

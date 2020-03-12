@@ -6,11 +6,9 @@ namespace SmallRepair.Management.Model
 {
     public class Customer
     {
-        public int IdCustomer { get; set; }
+        public string IdCustomer { get; set; }
 
         public string Name { get; set; }
-
-        public string ClaimId { get; set; }
 
         public virtual IList<ServiceValue> ServiceValues { get; set; }
 

@@ -10,52 +10,58 @@ namespace SmallRepair.Management.Repository
 {
     public class RepositoryEntity
     {
-        private readonly SmallRepairDbContext _context;
+        public readonly SmallRepairDbContext Context;
 
         public RepositoryEntity(SmallRepairDbContext context)
         {
-            _context = context;
+            this.Context = context;
         }
 
         public IQueryable<TEntity> All<TEntity>()
             where TEntity : class
         {
-            return _context.Set<TEntity>().AsQueryable();
+            return Context.Set<TEntity>().AsQueryable();
         }
 
         public IQueryable<TEntity> All<TEntity>(Expression<Func<TEntity, bool>> expression)
             where TEntity : class
         {
-            return _context.Set<TEntity>().Where(expression).AsQueryable();
+            return Context.Set<TEntity>().Where(expression).AsQueryable();
         }
 
         public void Add<TEntity>(params TEntity[] obj)
             where TEntity : class
         {
-            _context.Set<TEntity>().AddRange(obj);
+            Context.Set<TEntity>().AddRange(obj);
         }
 
         public void Delete<TEntity>(params TEntity[] obj)
             where TEntity : class
         {
-            _context.Set<TEntity>().RemoveRange(obj);
+            Context.Set<TEntity>().RemoveRange(obj);
         }
 
         public TEntity Find<TEntity>(int key)
             where TEntity : class
         {
-            return _context.Find<TEntity>(key);
+            return Context.Find<TEntity>(key);
+        }        
+
+        public TEntity Find<TEntity>(string key)
+            where TEntity : class
+        {
+            return Context.Find<TEntity>(key);
         }
 
         public void Update<TEntity>(params TEntity[] obj)
             where TEntity : class
         {
-            _context.Set<TEntity>().UpdateRange(obj);
+            Context.Set<TEntity>().UpdateRange(obj);
         }
 
         public void SaveChanges()
         {
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
     }
 }

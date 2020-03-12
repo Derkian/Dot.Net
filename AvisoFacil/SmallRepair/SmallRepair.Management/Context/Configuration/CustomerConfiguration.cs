@@ -15,7 +15,7 @@ namespace SmallRepair.Management.Context.Configuration
             builder.Property(customer => customer.Name)
                 .HasMaxLength(200);
 
-            builder.Property(customer => customer.ClaimId)
+            builder.Property(customer => customer.IdCustomer)
                 .HasMaxLength(450);
 
             builder.ToTable("Customer");
