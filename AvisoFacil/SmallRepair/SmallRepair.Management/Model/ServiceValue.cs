@@ -9,9 +9,9 @@ namespace SmallRepair.Management.Model
     {
         public int IdServiceValue { get; set; }
 
-        public string IdCustomer { get; set; }
+        public string IdCompany { get; set; }
 
-        public Customer Customer { get; set; }
+        public Company Company { get; set; }
 
         public EnmServiceType ServiceType { get; set; }
 

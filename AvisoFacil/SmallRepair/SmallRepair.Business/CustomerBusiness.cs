@@ -7,9 +7,9 @@ using System.Text;
 
 namespace SmallRepair.Business
 {
-    public class CustomerBusiness : BaseBussiness
+    public class CompanyBusiness : BaseBussiness
     {
-        public CustomerBusiness(RepositoryEntity repository) : base(repository)
+        public CompanyBusiness(RepositoryEntity repository) : base(repository)
         {
         }
 
@@ -30,13 +30,13 @@ namespace SmallRepair.Business
         public IList<ServiceValue> GetServiceValues(string idCustomer)
         {
             return _repository
-                    .All<ServiceValue>(a => a.IdCustomer == idCustomer)
+                    .All<ServiceValue>(a => a.IdCompany == idCustomer)
                     .ToList();
         }
 
-        public Customer GetCustomer(string idCustomer)
+        public Company Get(string idCustomer)
         {
-            return _repository.Find<Customer>(idCustomer);
+            return _repository.Find<Company>(idCustomer);
         }
     }
 }

@@ -9,9 +9,9 @@ namespace SmallRepair.Api.Extensions
 {
     public static class CustomerExtension
     {
-        public static ClienteViewModel ToView(this Customer customer)
+        public static ClienteViewModel ToView(this Company customer)
         {
-            var cliente = new ClienteViewModel() { Id = customer.IdCustomer, Nome = customer.Name };
+            var cliente = new ClienteViewModel() { Id = customer.IdCompany, Nome = customer.Name };
 
             if (customer?.ServiceValues != null)
             {

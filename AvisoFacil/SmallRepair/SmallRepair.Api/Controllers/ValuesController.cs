@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SmallRepair.Api.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase

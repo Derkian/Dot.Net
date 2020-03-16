@@ -56,7 +56,7 @@ namespace SmallRepair.Api
             });
 
             services.AddTransient<RepositoryEntity, RepositoryEntity>();
-            services.AddTransient<CustomerBusiness, CustomerBusiness>();
+            services.AddTransient<CompanyBusiness, CompanyBusiness>();
             services.AddTransient<AssessmentBusiness, AssessmentBusiness>();
 
             services.AddAuthentication(x =>

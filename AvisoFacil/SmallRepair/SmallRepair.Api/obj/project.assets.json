@@ -2,6 +2,27 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.1": {
+      "Iron.Assets.Rendering.Universal/16.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/IronPdf.Assets.Rendering.Universal.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/IronPdf.Assets.Rendering.Universal.dll": {}
+        }
+      },
+      "IronPdf/2020.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Iron.Assets.Rendering.Universal": "16.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/IronPdf.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/IronPdf.dll": {}
+        }
+      },
       "Microsoft.AspNet.WebApi.Client/5.2.7": {
         "type": "package",
         "dependencies": {
@@ -2797,6 +2818,36 @@
           "lib/netstandard1.6/NuGet.Frameworks.dll": {}
         }
       },
+      "PDF.Core/2020.0.0": {
+        "type": "package",
+        "dependencies": {
+          "IronPdf": "2020.1.0"
+        }
+      },
+      "RazorLight/2.0.0-beta4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Hosting.Abstractions": "2.1.0",
+          "Microsoft.AspNetCore.Html.Abstractions": "2.1.0",
+          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "2.1.0",
+          "Microsoft.AspNetCore.Razor.Language": "2.1.0",
+          "Microsoft.AspNetCore.Razor.Runtime": "2.1.0",
+          "Microsoft.CodeAnalysis.Razor": "2.1.0",
+          "Microsoft.Extensions.Caching.Abstractions": "2.1.0",
+          "Microsoft.Extensions.Caching.Memory": "2.1.0",
+          "Microsoft.Extensions.DependencyInjection": "2.1.0",
+          "Microsoft.Extensions.DependencyModel": "2.1.0",
+          "Microsoft.Extensions.FileProviders.Physical": "2.1.0",
+          "Microsoft.Extensions.Primitives": "2.1.0",
+          "System.Buffers": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/RazorLight.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/RazorLight.dll": {}
+        }
+      },
       "Remotion.Linq/2.2.0": {
         "type": "package",
         "dependencies": {
@@ -4634,6 +4685,8 @@
         "dependencies": {
           "Microsoft.AspNet.WebApi.Client": "5.2.7",
           "Microsoft.AspNetCore.Http": "2.1.1",
+          "PDF.Core": "2020.0.0",
+          "RazorLight": "2.0.0-beta4",
           "SmallRepair.Management": "1.0.0",
           "System.Net.Http": "4.3.4"
         },
@@ -4662,6 +4715,34 @@
     }
   },
   "libraries": {
+    "Iron.Assets.Rendering.Universal/16.0.0": {
+      "sha512": "UW3L5OY2zSqAYYhU+Sq0z12kgIMD2eN7JlrSRw2jCztGjfIIYevG2R0d4LNftBngNMhZJq3h6eUMnZnKum/0EA==",
+      "type": "package",
+      "path": "iron.assets.rendering.universal/16.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "iron.assets.rendering.universal.16.0.0.nupkg.sha512",
+        "iron.assets.rendering.universal.nuspec",
+        "lib/netstandard2.0/IronPdf.Assets.Rendering.Universal.dll"
+      ]
+    },
+    "IronPdf/2020.1.0": {
+      "sha512": "ZAaCXCab7HeccK2EpX3DJZEMvqOYe6SFi99igsOsITKmJ2KtlzYqvZEg9+ZzoXUV5doR4oq6q6pkvLS1aygU8Q==",
+      "type": "package",
+      "path": "ironpdf/2020.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ironpdf.2020.1.0.nupkg.sha512",
+        "ironpdf.nuspec",
+        "lib/net40/IronPdf.dll",
+        "lib/net40/IronPdf.xml",
+        "lib/netstandard2.0/IronPdf.dll",
+        "lib/netstandard2.0/IronPdf.xml",
+        "readme.txt"
+      ]
+    },
     "Microsoft.AspNet.WebApi.Client/5.2.7": {
       "sha512": "/76fAHknzvFqbznS6Uj2sOyE9rJB3PltY+f53TH8dX9RiGhk02EhuFCWljSj5nnqKaTsmma8DFR50OGyQ4yJ1g==",
       "type": "package",
@@ -7764,6 +7845,36 @@
         "lib/netstandard1.6/NuGet.Frameworks.xml",
         "nuget.frameworks.4.7.0.nupkg.sha512",
         "nuget.frameworks.nuspec"
+      ]
+    },
+    "PDF.Core/2020.0.0": {
+      "sha512": "bpR8QA3gTzFSHqkTQ010UmZ46KtJtUDMcTG3W2uXINCOB9XUD+qaU5qX4ZNVaR2pkPdrUhpwPj7XYEOmasj0QQ==",
+      "type": "package",
+      "path": "pdf.core/2020.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/Pdf.Core.Readme.txt",
+        "pdf.core.2020.0.0.nupkg.sha512",
+        "pdf.core.nuspec"
+      ]
+    },
+    "RazorLight/2.0.0-beta4": {
+      "sha512": "0/ITfXtdj8UTgMT4weHlDbTwunkLc8oSNLZb0H2dJePjYmRQVgR287x240zvN5lHVSTkdSxKmn6Z8dVNnMYo6Q==",
+      "type": "package",
+      "path": "razorlight/2.0.0-beta4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "lib/netcoreapp3.0/RazorLight.dll",
+        "lib/netcoreapp3.0/RazorLight.xml",
+        "lib/netcoreapp3.1/RazorLight.dll",
+        "lib/netcoreapp3.1/RazorLight.xml",
+        "lib/netstandard2.0/RazorLight.dll",
+        "lib/netstandard2.0/RazorLight.xml",
+        "razorlight.2.0.0-beta4.nupkg.sha512",
+        "razorlight.nuspec"
       ]
     },
     "Remotion.Linq/2.2.0": {

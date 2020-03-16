@@ -24,7 +24,7 @@ namespace SmallRepair.Console
 
             var assessment = new Assessment()
             {
-                IdCustomer = "",
+                IdCompany = "",
                 BodyType = "SEDAN",
                 Mileage = "10000",
                 Plate = "ABC-1234",

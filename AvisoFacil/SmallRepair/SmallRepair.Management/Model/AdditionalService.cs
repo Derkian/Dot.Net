@@ -10,7 +10,7 @@ namespace SmallRepair.Management.Model
 
         public string IdCustomer { get; set; }
 
-        public Customer Customer { get; set; }
+        public Company Customer { get; set; }
 
         public string Description { get; set; }
 

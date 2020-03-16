@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RazorLight;
 using SmallRepair.Business.Model;
 using SmallRepair.Management.Context;
 using SmallRepair.Management.Enum;
@@ -6,13 +7,16 @@ using SmallRepair.Management.Model;
 using SmallRepair.Management.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SmallRepair.Business
 {
     public class AssessmentBusiness : BaseBussiness
     {
+
         public AssessmentBusiness(RepositoryEntity repository)
             : base(repository)
         {
@@ -25,7 +29,7 @@ namespace SmallRepair.Business
             try
             {
                 //consulta o cliente
-                Customer customer = _repository.Find<Customer>(assessment.IdCustomer);
+                Company customer = _repository.Find<Company>(assessment.IdCompany);
 
                 if (customer != null)
                 {
@@ -33,7 +37,7 @@ namespace SmallRepair.Business
                     if (assessment.AssessmentServicesValues == null || assessment.AssessmentServicesValues.Count() == 0)
                     {
                         assessment.AssessmentServicesValues =
-                            _repository.All<ServiceValue>(a => a.IdCustomer == customer.IdCustomer)
+                            _repository.All<ServiceValue>(a => a.IdCompany == customer.IdCompany)
                             .Select(a => new AssessmentServiceValue()
                             {
                                 ServiceType = a.ServiceType,
@@ -59,7 +63,7 @@ namespace SmallRepair.Business
             return assessmentResult;
         }
 
-        public ResponseMessage<AssessmentReport> AssessmentReport(Assessment assessment)
+        public ResponseMessage<AssessmentReport> AssessmentSummary(Assessment assessment)
         {
             ResponseMessage<AssessmentReport> responseMessage = null;
 
@@ -147,7 +151,7 @@ namespace SmallRepair.Business
         //    return assessmentResult;
         //}
 
-        public ResponseMessage<Pagination<Assessment>> List(Pagination<Assessment> page, Customer customer)
+        public ResponseMessage<Pagination<Assessment>> List(Pagination<Assessment> page, Company customer)
         {
             ResponseMessage<Pagination<Assessment>> pageResult = null;
 
@@ -156,7 +160,7 @@ namespace SmallRepair.Business
                 var assessmentsList = _repository.Context
                                                  .Assessments
                                                  .Include(a => a.Parts)
-                                                 .Where(a => a.IdCustomer == customer.IdCustomer)
+                                                 .Where(a => a.IdCompany == customer.IdCompany)
                                                  .OrderByDescending(a => a.IdAssessment)
                                                  .ToList();
 
@@ -187,9 +191,9 @@ namespace SmallRepair.Business
                 Assessment assessmentDb = _repository.Context
                                                 .Assessments
                                                 .Include(a => a.AssessmentAdditionalServices)
-                                                .Include(a => a.Customer)
+                                                .Include(a => a.Company)
                                                 .Include(a => a.AssessmentServicesValues)
-                                                .FirstOrDefault(a => a.IdAssessment == assessment.IdAssessment && a.IdCustomer == assessment.IdCustomer);
+                                                .FirstOrDefault(a => a.IdAssessment == assessment.IdAssessment && a.IdCompany == assessment.IdCompany);
 
                 if (assessmentDb == null)
                     return ResponseMessage<Assessment>.Fault("Orçamento não encontrado.");
@@ -443,9 +447,9 @@ namespace SmallRepair.Business
                 Assessment assessmentDb = Find(assessment).Object;
 
                 if (assessmentDb != null)
-                {   
+                {
                     part.IdAssessment = assessmentDb.IdAssessment;
-                        
+
                     part.TotalPrice = part.UnitaryValue * part.Quantity;
 
                     _repository.Add<Part>(part);
@@ -460,6 +464,87 @@ namespace SmallRepair.Business
             catch (Exception ex)
             {
                 responseMessage = ResponseMessage<Part>.Fault(ex.Message);
+            }
+
+            return responseMessage;
+        }
+
+        public async Task<ResponseMessage<string>> ReportHTMLAsync(Assessment assessment, string IdCompany, string reportCode)
+        {
+            ResponseMessage<string> responseMessage = null;
+
+            try
+            {
+                string _template = string.Empty;
+                ReportTemplate reportTemplate;
+
+                var companyReportTemplate = _repository
+                                        .All<CompanyReportTemplate>(a => a.IdCompany == IdCompany &&
+                                                                         a.Code.ToUpper().Equals(reportCode.ToUpper()))
+                                        .FirstOrDefault();
+
+                if (companyReportTemplate == null)
+                {
+                    reportTemplate = _repository.All<ReportTemplate>(a => a.Code.ToUpper().Equals(reportCode)).FirstOrDefault();
+                    _template = reportTemplate.Template;
+                }
+                else
+                    _template = companyReportTemplate.Template;
+
+                //RECUPERA O SUMÁRIO DO ASSESSMENT
+                var result = this.AssessmentSummary(assessment);
+
+                if (!result.Sucess)
+                    return ResponseMessage<string>.Fault(result.Error.ToArray());
+
+
+                var engine = new RazorLightEngineBuilder()                  
+                  .UseEmbeddedResourcesProject(typeof(AssessmentBusiness))
+                  .UseMemoryCachingProvider()
+                  .Build();
+
+                string templateResult = await engine.CompileRenderStringAsync("templateKey", _template, result.Object);
+
+                responseMessage = ResponseMessage<string>.Ok(templateResult);
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ResponseMessage<string>.Fault(ex.Message);
+            }
+
+            return responseMessage;
+        }
+
+        public async Task<ResponseMessage<Stream>> ReportPDFAsync(Assessment assessment,
+                                                                string idCompany,
+                                                                string reportCode)
+        {
+            ResponseMessage<Stream> responseMessage = null;
+
+            try
+            {
+                var reportHTML = await this.ReportHTMLAsync(assessment, idCompany, reportCode);
+
+                if (reportHTML.Sucess)
+                {
+                    var Renderer = new IronPdf.HtmlToPdf(new IronPdf.PdfPrintOptions()
+                    {
+                        //millimeters
+                        MarginTop = 10,  
+                        MarginBottom = 10,
+                        MarginLeft = 10,
+                        MarginRight = 10,
+                        PaperSize = IronPdf.PdfPrintOptions.PdfPaperSize.A4
+                    });
+
+                    var pdfDocument = Renderer.RenderHtmlAsPdf(reportHTML.Object);
+
+                    responseMessage = ResponseMessage<Stream>.Ok(pdfDocument.Stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ResponseMessage<Stream>.Fault(ex.Message);
             }
 
             return responseMessage;

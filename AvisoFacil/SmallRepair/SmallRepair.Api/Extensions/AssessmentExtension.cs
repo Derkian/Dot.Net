@@ -18,7 +18,7 @@ namespace SmallRepair.Api.Extensions
                 Model = view.Model,
                 Plate = view.Plate,
                 CustomerName = view.CustomerName,
-                IdCustomer = ""
+                IdCompany = ""
             };
 
             if (view.ServiceValues != null)

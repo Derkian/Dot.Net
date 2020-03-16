@@ -37,9 +37,9 @@ namespace SmallRepair.Management.Context.Configuration
                 .HasForeignKey(a => a.IdAssessment);
 
             //Cliente
-            builder.HasOne(a => a.Customer)
+            builder.HasOne(a => a.Company)
                 .WithMany(a => a.Assessments)
-                .HasForeignKey(a => a.IdCustomer);
+                .HasForeignKey(a => a.IdCompany);
 
             //Serviço Adicional
             builder.HasMany(a => a.AssessmentAdditionalServices)

@@ -23,9 +23,9 @@ namespace SmallRepair.Management.Context.Configuration
             builder.Property(u => u.Email)
                 .HasMaxLength(200);
 
-            builder.HasOne(u => u.Customer)
+            builder.HasOne(u => u.Company)
                 .WithMany(u => u.Users)
-                .HasForeignKey(u => u.IdCustomer);
+                .HasForeignKey(u => u.IdCompany);
         }
     }
 }

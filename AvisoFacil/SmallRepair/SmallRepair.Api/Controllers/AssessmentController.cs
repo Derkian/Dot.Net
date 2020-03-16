@@ -31,7 +31,7 @@ namespace SmallRepair.Api.Controllers
         [HttpGet("{id}")]
         public ActionResult<Assessment> GetAssessment(int id)
         {
-            var assement = _business.Find(new Assessment() { IdAssessment = id, IdCustomer = User.GetClaim("CompanyId") });
+            var assement = _business.Find(new Assessment() { IdAssessment = id, IdCompany = User.GetClaim("CompanyId") });
 
             if (assement.Sucess)
             {
@@ -51,9 +51,9 @@ namespace SmallRepair.Api.Controllers
                             {
                                 PageNumber = pageNumber,
                                 PageSize = pageSize
-                            }, new Customer()
+                            }, new Company()
                             {
-                                IdCustomer = User.GetClaim("CompanyId")
+                                IdCompany = User.GetClaim("CompanyId")
                             });
 
             if (result.Sucess)
@@ -65,7 +65,7 @@ namespace SmallRepair.Api.Controllers
         [HttpGet("AssessmentReport/{idAssessment}")]
         public IActionResult GetReport(int idAssessment)
         {
-            var report = _business.AssessmentReport(new Assessment() { IdAssessment = idAssessment, IdCustomer = User.GetClaim("CompanyId") });
+            var report = _business.AssessmentSummary(new Assessment() { IdAssessment = idAssessment, IdCompany = User.GetClaim("CompanyId") });
 
             var result = HttpContext.User.Claims.FirstOrDefault();
 
@@ -74,6 +74,8 @@ namespace SmallRepair.Api.Controllers
             else
                 return BadRequest(report.Error);
         }
+
+        
 
         #endregion
 
@@ -84,7 +86,7 @@ namespace SmallRepair.Api.Controllers
         {
             Assessment assessment = assessmentViewModel.ToModel();
 
-            assessment.IdCustomer = User.GetClaim("CompanyId");
+            assessment.IdCompany = User.GetClaim("CompanyId");
 
             var result = _business.Add(assessment);
 
@@ -116,7 +118,7 @@ namespace SmallRepair.Api.Controllers
                 var result = _business.AddPart(new Assessment()
                 {
                     IdAssessment = idAssessment,
-                    IdCustomer = User.GetClaim("CompanyId")
+                    IdCompany = User.GetClaim("CompanyId")
                 }, _part);
 
                 if (result.Sucess)
@@ -143,7 +145,7 @@ namespace SmallRepair.Api.Controllers
                 var result = _business.AddManualPart(new Assessment()
                 {
                     IdAssessment = idAssessment,
-                    IdCustomer = User.GetClaim("CompanyId")
+                    IdCompany = User.GetClaim("CompanyId")
                 }, manualPart);
 
                 if (result.Sucess)
@@ -166,7 +168,7 @@ namespace SmallRepair.Api.Controllers
                     Value = additionalService.Value
                 };
 
-                var result = _business.AddAdditionalService(new Assessment() { IdAssessment = idAssessment, IdCustomer = User.GetClaim("CompanyId") }, assessmentAdditional);
+                var result = _business.AddAdditionalService(new Assessment() { IdAssessment = idAssessment, IdCompany = User.GetClaim("CompanyId") }, assessmentAdditional);
 
                 if (result.Sucess)
                     return Ok();
@@ -188,7 +190,7 @@ namespace SmallRepair.Api.Controllers
                                 .DeleteAdditionalService(new Assessment()
                                 {
                                     IdAssessment = idAssessment,
-                                    IdCustomer = User.GetClaim("CompanyId")
+                                    IdCompany = User.GetClaim("CompanyId")
                                 },
                                 new AssessmentAdditionalService()
                                 {
@@ -218,7 +220,7 @@ namespace SmallRepair.Api.Controllers
                                 .DeletePart(new Assessment()
                                 {
                                     IdAssessment = idAssessment,
-                                    IdCustomer = User.GetClaim("CompanyId")
+                                    IdCompany = User.GetClaim("CompanyId")
                                 }, _part);
 
                 if (result.Sucess)

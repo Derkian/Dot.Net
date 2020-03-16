@@ -13,11 +13,11 @@ namespace SmallRepair.Management.Context.Configuration
         {
             builder.HasKey(a => a.IdServiceValue);
 
-            builder.HasOne(a => a.Customer)
+            builder.HasOne(a => a.Company)
                 .WithMany(a => a.ServiceValues)
-                .HasForeignKey(a => a.IdCustomer);
+                .HasForeignKey(a => a.IdCompany);
 
-            builder.ToTable("CustomerServiceValue");
+            builder.ToTable("CompanyServiceValue");
         }
     }
 }

@@ -34,14 +34,14 @@ namespace SmallRepair.Business
 
                 if (userDb == null)
                 {
-                    Customer customer = _repository
-                                        .All<Customer>(a => a.IdCustomer == user.IdCustomer)
+                    Company customer = _repository
+                                        .All<Company>(a => a.IdCompany == user.IdCompany)
                                         .FirstOrDefault();
 
 
                     var userReponse = await _userApi.AddUserApiAsync(new UserApiModel()
                     {
-                        CompanyId = customer.IdCustomer,
+                        CompanyId = customer.IdCompany,
                         Login = user.Email,
                         Name = user.Name,
                         SystemId = _systemId,

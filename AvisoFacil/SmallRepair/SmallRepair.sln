@@ -59,4 +59,26 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {588B25C9-F739-406D-B10C-AE62F2F0AFD9}
 	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://axbrtfs:8080/tfs/solerabr
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SmallRepair.Management\\SmallRepair.Management.csproj
+		SccProjectTopLevelParentUniqueName1 = SmallRepair.sln
+		SccProjectName1 = SmallRepair.Management
+		SccLocalPath1 = SmallRepair.Management
+		SccProjectUniqueName2 = SmallRepair.Business\\SmallRepair.Business.csproj
+		SccProjectTopLevelParentUniqueName2 = SmallRepair.sln
+		SccProjectName2 = SmallRepair.Business
+		SccLocalPath2 = SmallRepair.Business
+		SccProjectUniqueName3 = SmallRepair.Console\\SmallRepair.Console.csproj
+		SccProjectTopLevelParentUniqueName3 = SmallRepair.sln
+		SccProjectName3 = SmallRepair.Console
+		SccLocalPath3 = SmallRepair.Console
+		SccProjectUniqueName4 = SmallRepair.Api\\SmallRepair.Api.csproj
+		SccProjectTopLevelParentUniqueName4 = SmallRepair.sln
+		SccProjectName4 = SmallRepair.Api
+		SccLocalPath4 = SmallRepair.Api
+	EndGlobalSection
 EndGlobal

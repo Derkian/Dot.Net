@@ -21,7 +21,7 @@ namespace SmallRepair.Management.Context
 
         public DbSet<BaremoTime> BaremoTimes { get; set; }
 
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Company> Customers { get; set; }
 
         public DbSet<ServiceValue> ServiceValues { get; set; }
 
@@ -37,7 +37,11 @@ namespace SmallRepair.Management.Context
 
         public DbSet<Part> Parts { get; set; }
 
-        public DbSet<Service> Services { get; set; }         
+        public DbSet<Service> Services { get; set; }
+
+        public DbSet<ReportTemplate> ReportTemplates { get; set; }
+
+        public DbSet<CompanyReportTemplate> CompanyReportTemplates { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,7 +51,7 @@ namespace SmallRepair.Management.Context
             modelBuilder.ApplyConfiguration(new Configuration.BaremoConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.BaremoTimeConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.CatalogConfiguration());
-            modelBuilder.ApplyConfiguration(new Configuration.CustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new Configuration.CompanyConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.UserConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.AdditionalServiceConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.AssessmentConfiguration());
@@ -56,6 +60,8 @@ namespace SmallRepair.Management.Context
             modelBuilder.ApplyConfiguration(new Configuration.PartConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.ServiceConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.ServiceValueConfiguration());
+            modelBuilder.ApplyConfiguration(new Configuration.ReportTemplateConfiguration());
+            modelBuilder.ApplyConfiguration(new Configuration.CompanyReportTemplateConfiguration());
         }
     }
 }

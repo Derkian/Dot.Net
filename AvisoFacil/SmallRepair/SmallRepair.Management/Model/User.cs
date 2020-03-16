@@ -6,11 +6,11 @@ namespace SmallRepair.Management.Model
 {
     public class User
     {
-        public int IdUser { get; set; }
+        public string IdUser { get; set; }
 
-        public Customer Customer { get; set; }
+        public Company Company { get; set; }
 
-        public string IdCustomer { get; set; }
+        public string IdCompany { get; set; }
 
         public string ClaimId { get; set; }
 
