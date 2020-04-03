@@ -9,15 +9,15 @@ namespace SmallRepair.Api.Extensions
 {
     public static class CustomerExtension
     {
-        public static ClienteViewModel ToView(this Company customer)
+        public static CompanyViewModel ToView(this Company customer)
         {
-            var cliente = new ClienteViewModel() { Id = customer.IdCompany, Nome = customer.Name };
+            var cliente = new CompanyViewModel() { Id = customer.IdCompany, Name = customer.Name };
 
             if (customer?.ServiceValues != null)
             {
-                cliente.ValorServico = customer
+                cliente.ServiceValues = customer
                                         .ServiceValues
-                                        .Select(a => new ValorServicoViewModel()
+                                        .Select(a => new ServiceValueViewModel()
                                         {
                                             ServiceType = a.ServiceType,
                                             Value = a.Value
@@ -28,12 +28,11 @@ namespace SmallRepair.Api.Extensions
             return cliente;
         }
 
-        public static IList<ServicoAdicionalModel> ToView(this IList<AdditionalService> services)
+        public static IList<AdditionalServiceViewModel> ToView(this IList<AdditionalService> services)
         {
             return services
-                    .Select(a => new ServicoAdicionalModel()
-                    {
-                        Id = a.IdAdditionalService,
+                    .Select(a => new AdditionalServiceViewModel()
+                    {   
                         Description = a.Description,
                         Value = a.Value
                     })

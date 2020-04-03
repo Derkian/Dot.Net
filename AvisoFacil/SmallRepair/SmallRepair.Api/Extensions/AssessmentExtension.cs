@@ -13,8 +13,10 @@ namespace SmallRepair.Api.Extensions
         {
             Assessment assessment = new Assessment()
             {
+                IdAssessment = view.Id,
                 Mileage = view.Mileage,
                 BodyType = view.BodyType,
+                State = view.State,                
                 Model = view.Model,
                 Plate = view.Plate,
                 CustomerName = view.CustomerName,
@@ -23,7 +25,7 @@ namespace SmallRepair.Api.Extensions
 
             if (view.ServiceValues != null)
             {
-                assessment.AssessmentServicesValues = view
+                assessment.ServicesValues = view
                                                         .ServiceValues
                                                         .Select(a => new AssessmentServiceValue()
                                                         {
@@ -46,11 +48,11 @@ namespace SmallRepair.Api.Extensions
                 CustomerName = assessment.CustomerName
             };
 
-            if (assessment.AssessmentServicesValues != null)
+            if (assessment.ServicesValues != null)
             {
                 assessmentViewModel.ServiceValues= assessment
-                                                        .AssessmentServicesValues
-                                                        .Select(a => new ValorServicoViewModel()
+                                                        .ServicesValues
+                                                        .Select(a => new ServiceValueViewModel()
                                                         {
                                                             ServiceType = a.ServiceType,
                                                             Value = a.Value

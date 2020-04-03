@@ -6,13 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using System.IO;
 
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using SmallRepair.Business;
+using SmallRepair.Business.Util;
 using SmallRepair.Management.Context;
 using SmallRepair.Management.Repository;
+using System.Linq;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.OpenApi.Any;
 
 namespace SmallRepair.Api
 {
@@ -55,7 +62,13 @@ namespace SmallRepair.Api
                 options.UseSqlServer(Configuration.GetConnectionString("SmallRepair"));
             });
 
+
+            var smtpConfig = new SmtpConfig();
+            Configuration.GetSection("Smtp").Bind(smtpConfig);
+
             services.AddTransient<RepositoryEntity, RepositoryEntity>();
+            services.AddTransient(s => new Email(smtpConfig));
+
             services.AddTransient<CompanyBusiness, CompanyBusiness>();
             services.AddTransient<AssessmentBusiness, AssessmentBusiness>();
 
@@ -83,11 +96,40 @@ namespace SmallRepair.Api
                 o.AssumeDefaultVersionWhenUnspecified = true;
                 o.DefaultApiVersion = new ApiVersion(2, 0);
             });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v2.0", new OpenApiInfo
+                {
+                    Title = "Small Repair",
+                    Version = "v2.0",
+                    Description = "Small Repair API",
+                });
+
+                c.SchemaFilter<EnumSchemaFilter>();
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Small Repair");
+                
+                c.RoutePrefix = "docs";
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -98,6 +140,24 @@ namespace SmallRepair.Api
             app.UseCors("AllowSpecificOrigins");
 
             app.UseMvc();
+        }
+    }
+
+    public class EnumSchemaFilter : ISchemaFilter
+    {
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            if (context.Type.IsEnum)
+            {
+                var enumValues = schema.Enum.ToArray();
+                var i = 0;
+                schema.Enum.Clear();
+                foreach (var n in Enum.GetNames(context.Type).ToList())
+                {
+                    schema.Enum.Add(new OpenApiString(n + $" = {((OpenApiPrimitive<int>)enumValues[i]).Value}"));
+                    i++;
+                }
+            }
         }
     }
 }

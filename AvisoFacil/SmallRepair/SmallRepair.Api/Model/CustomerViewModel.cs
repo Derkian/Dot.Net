@@ -6,27 +6,18 @@ using System.Threading.Tasks;
 
 namespace SmallRepair.Api.Model
 {
-    public class ClienteViewModel
+    public class CompanyViewModel
     {
         public string Id { get; set; }
 
-        public string Nome { get; set; }
+        public string Name { get; set; }
 
-        public IList<ValorServicoViewModel> ValorServico { get; set; }
+        public IList<ServiceValueViewModel> ServiceValues { get; set; }
     }
 
-    public class ValorServicoViewModel
+    public class ServiceValueViewModel
     {
         public EnmServiceType ServiceType { get; set; }
-
-        public string Description { get; set; }
-
-        public double Value { get; set; }
-    }
-
-    public class ServicoAdicionalModel
-    {
-        public int Id { get; set; }
 
         public string Description { get; set; }
 

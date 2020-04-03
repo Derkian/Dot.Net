@@ -20,14 +20,23 @@ namespace SmallRepair.Api.Controllers
     [Authorize]
     public class AssessmentController : ControllerBase
     {
+        #region VARIAVEL
         public readonly AssessmentBusiness _business;
+        #endregion
 
+        #region CONSTRUTOR
         public AssessmentController(AssessmentBusiness business)
         {
             _business = business;
         }
+        #endregion
 
         #region GET
+        /// <summary>
+        /// Recupera um Assessment
+        /// </summary>
+        /// <param name="id">Id Assessment</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public ActionResult<Assessment> GetAssessment(int id)
         {
@@ -43,18 +52,27 @@ namespace SmallRepair.Api.Controllers
             }
         }
 
-        [HttpGet("List", Name = "ListAssessment")]
-        public IActionResult ListAssessment(int pageNumber = 1, int pageSize = 10)
+        /// <summary>
+        /// Retorna lista de Assessment - Paginado
+        /// </summary>        
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [HttpPost("List", Name = "ListAssessment")]
+        public IActionResult ListAssessment([FromBody]Search search,
+                                            [FromQuery] int pageNumber = 1,
+                                            [FromQuery] int pageSize = 10)
         {
+            search = search ?? new Search();
+
+            search.SetCompany(new Company() { IdCompany = User.GetClaim("CompanyId") });
+
             var result = _business
                             .List(new Pagination<Assessment>()
                             {
                                 PageNumber = pageNumber,
                                 PageSize = pageSize
-                            }, new Company()
-                            {
-                                IdCompany = User.GetClaim("CompanyId")
-                            });
+                            }, search);
 
             if (result.Sucess)
                 return Ok(result.Object);
@@ -62,10 +80,17 @@ namespace SmallRepair.Api.Controllers
                 return BadRequest(result.Error);
         }
 
-        [HttpGet("AssessmentReport/{idAssessment}")]
-        public IActionResult GetReport(int idAssessment)
+
+        /// <summary>
+        /// Recupera o sumário do Assessment
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <param name="assessmentVersion"></param>
+        /// <returns></returns>
+        [HttpGet("Summary")]
+        public IActionResult GetReport(int idAssessment, int assessmentVersion)
         {
-            var report = _business.AssessmentSummary(new Assessment() { IdAssessment = idAssessment, IdCompany = User.GetClaim("CompanyId") });
+            var report = _business.GetAssessmentSummary(new Assessment() { IdAssessment = idAssessment, Version = assessmentVersion, IdCompany = User.GetClaim("CompanyId") });
 
             var result = HttpContext.User.Claims.FirstOrDefault();
 
@@ -75,12 +100,15 @@ namespace SmallRepair.Api.Controllers
                 return BadRequest(report.Error);
         }
 
-        
-
         #endregion
 
         #region POST
 
+        /// <summary>
+        /// Cria um Assessment
+        /// </summary>
+        /// <param name="assessmentViewModel"></param>
+        /// <returns></returns>
         [HttpPost("Create")]
         public IActionResult PostAssessment([FromBody] AssessmentViewModel assessmentViewModel)
         {
@@ -88,12 +116,12 @@ namespace SmallRepair.Api.Controllers
 
             assessment.IdCompany = User.GetClaim("CompanyId");
 
-            var result = _business.Add(assessment);
+            var result = _business.CreateAssessment(assessment);
 
             if (result.Sucess)
             {
                 Assessment assessmentResult = result.Object;
-                return Ok(assessmentResult.ToView());
+                return Ok(assessmentResult);
             }
             else
             {
@@ -101,6 +129,57 @@ namespace SmallRepair.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Conclui o Assessment
+        /// </summary>
+        /// <param name="assessmentViewModel"></param>
+        /// <returns></returns>
+        [HttpPut("Complete/{idAssessment}")]
+        public IActionResult PutAssessment(int idAssessment)
+        {
+            Assessment assessment = new Assessment() { IdCompany = User.GetClaim("CompanyId"), IdAssessment = idAssessment };
+
+            var result = _business.UpdateAssessment(assessment, User.GetUser());
+
+            if (result.Sucess)
+            {
+                Assessment assessmentResult = result.Object;
+                return Ok(assessmentResult);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
+        }
+
+        /// <summary>
+        /// Cria uma nova versão para o Assessment
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <returns></returns>
+        [HttpPost("CreateVersion/{idAssessment}")]
+        public IActionResult AddAssessmentVersion(int idAssessment)
+        {
+            Assessment assessment = new Assessment() { IdAssessment = idAssessment, IdCompany = User.GetClaim("companyId") };
+
+            var result = _business.CreateVersion(assessment, User.GetUser());
+
+            if (result.Sucess)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
+        }
+
+        /// <summary>
+        /// Adiciona uma peça do Baremo
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <param name="part"></param>
+        /// <returns></returns>
         [HttpPost("Part/Baremo/{idAssessment}")]
         public IActionResult AddPart(int idAssessment, PartViewModel part)
         {
@@ -130,6 +209,12 @@ namespace SmallRepair.Api.Controllers
                 return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Adiciona uma peça manual
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <param name="manualPartViewModel"></param>
+        /// <returns></returns>
         [HttpPost("Part/Manual/{idAssessment}")]
         public IActionResult AddManualPart(int idAssessment, ManualPartViewModel manualPartViewModel)
         {
@@ -157,6 +242,12 @@ namespace SmallRepair.Api.Controllers
                 return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Incluir um serviço adicional
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <param name="additionalService"></param>
+        /// <returns></returns>
         [HttpPost("AdditionalService/{idAssessment}")]
         public IActionResult AddAdditionalService(int idAssessment, AdditionalServiceViewModel additionalService)
         {
@@ -181,6 +272,12 @@ namespace SmallRepair.Api.Controllers
         #endregion
 
         #region DELETE
+        /// <summary>
+        /// Remove um serviço adicional
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <param name="IdAssessmentAdditionalService"></param>
+        /// <returns></returns>
         [HttpDelete("AdditionalService")]
         public IActionResult DeleteAdditionalService(int idAssessment, int IdAssessmentAdditionalService)
         {
@@ -206,6 +303,12 @@ namespace SmallRepair.Api.Controllers
                 return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Remove uma peça do assessment
+        /// </summary>
+        /// <param name="idAssessment"></param>
+        /// <param name="IdPart"></param>
+        /// <returns></returns>
         [HttpDelete("Part/Baremo")]
         public IActionResult DeletePart(int idAssessment, int IdPart)
         {

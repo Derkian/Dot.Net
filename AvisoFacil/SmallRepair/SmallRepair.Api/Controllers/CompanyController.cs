@@ -21,33 +21,66 @@ namespace SmallRepair.Api.Controllers
     [Authorize]
     public class CompanyController : ControllerBase
     {
-
+        #region VARIAVEL
         public readonly CompanyBusiness _business;
+        #endregion
 
+        #region CONSTRUTOR
         public CompanyController(CompanyBusiness business)
         {
             _business = business;
         }
+        #endregion
 
+        #region GET
+        /// <summary>
+        /// Recupera os dados da Empresa
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: api/Customer/5
-        [HttpGet("{id}", Name = "GetCompany")]
-        public ClienteViewModel Get(string id)
+        [HttpGet(Name = "GetCompany")]
+        public IActionResult Get()
         {
-            Company customer = _business.Get(id);
+            var idCompany = User.GetClaim("CompanyId");
 
-            customer.ServiceValues = customer.ServiceValues ?? _business.GetServiceValues(customer.IdCompany);
+            Company customer = _business.Get(idCompany);
 
-            return customer.ToView();
+            if (customer != null)
+            {
+                customer.ServiceValues = customer.ServiceValues ?? _business.GetServiceValues(customer.IdCompany);
+
+                return Ok(customer.ToView());
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        [HttpGet("ServicoAdicional/{Id}", Name = "GetAdditionalService")]
-        public IList<ServicoAdicionalModel> GetAdditionalService(string id)
+        /// <summary>
+        /// Lista os serviços adicionais da Empresa
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("AdditionalService", Name = "GetAdditionalService")]
+        public IActionResult GetAdditionalService()
         {
-            Company customer = _business.Get(id);
+            var idCompany = User.GetClaim("CompanyId");
 
-            customer.AdditionalServices = customer.AdditionalServices ?? _business.GetAdditionalServices(id);
+            Company customer = _business.Get(idCompany);
 
-            return customer?.AdditionalServices?.ToView();
-        }
+            if (customer != null)
+            {
+                customer.AdditionalServices = customer.AdditionalServices ?? _business.GetAdditionalServices(idCompany);
+
+                return Ok(customer?.AdditionalServices?.ToView());
+            }
+            else
+            {
+                return NotFound();
+            }
+        } 
+        #endregion
     }
 }
