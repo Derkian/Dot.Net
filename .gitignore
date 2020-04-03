@@ -15,5 +15,7 @@
 /Controle Financeiro/Extratos/contas.txt
 /Controle Financeiro/Extratos/extrato.txt
 /Controle Financeiro/Planilha Financeira Derkian.zip
-/bin
-/obj
+bin/
+obj/
+.vs/
+

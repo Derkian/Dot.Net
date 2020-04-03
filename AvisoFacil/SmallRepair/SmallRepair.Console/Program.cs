@@ -20,7 +20,7 @@ namespace SmallRepair.Console
             Management.Repository.RepositoryEntity repository =
                 new Management.Repository.RepositoryEntity(context);
 
-            Business.AssessmentBusiness assessmentBusiness = new Business.AssessmentBusiness(repository);
+            Business.AssessmentBusiness assessmentBusiness = new Business.AssessmentBusiness(repository, null);
 
             var assessment = new Assessment()
             {
@@ -29,7 +29,7 @@ namespace SmallRepair.Console
                 Mileage = "10000",
                 Plate = "ABC-1234",
                 Model = "VW - VOYAGE",
-                AssessmentServicesValues = new AssessmentServiceValue[] {
+                ServicesValues = new AssessmentServiceValue[] {
                     new AssessmentServiceValue() {
                         ServiceType = Management.Enum.EnmServiceType.Painting,
                         Value = 2.2

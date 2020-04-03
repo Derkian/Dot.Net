@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Management", "Management", "{E55E6971-2434-4878-8FFA-CF8052E1F825}"
 EndProject
@@ -39,7 +39,6 @@ Global
 		{E508489E-1334-4555-8C86-9FA666288803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E508489E-1334-4555-8C86-9FA666288803}.Release|Any CPU.Build.0 = Release|Any CPU
 		{34C9FB38-A9D1-44DF-8534-A391F23AEBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34C9FB38-A9D1-44DF-8534-A391F23AEBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34C9FB38-A9D1-44DF-8534-A391F23AEBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34C9FB38-A9D1-44DF-8534-A391F23AEBBA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B51F1EEE-E1B2-4D11-A397-078E79589589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,27 +57,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {588B25C9-F739-406D-B10C-AE62F2F0AFD9}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://axbrtfs:8080/tfs/solerabr
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SmallRepair.Management\\SmallRepair.Management.csproj
-		SccProjectTopLevelParentUniqueName1 = SmallRepair.sln
-		SccProjectName1 = SmallRepair.Management
-		SccLocalPath1 = SmallRepair.Management
-		SccProjectUniqueName2 = SmallRepair.Business\\SmallRepair.Business.csproj
-		SccProjectTopLevelParentUniqueName2 = SmallRepair.sln
-		SccProjectName2 = SmallRepair.Business
-		SccLocalPath2 = SmallRepair.Business
-		SccProjectUniqueName3 = SmallRepair.Console\\SmallRepair.Console.csproj
-		SccProjectTopLevelParentUniqueName3 = SmallRepair.sln
-		SccProjectName3 = SmallRepair.Console
-		SccLocalPath3 = SmallRepair.Console
-		SccProjectUniqueName4 = SmallRepair.Api\\SmallRepair.Api.csproj
-		SccProjectTopLevelParentUniqueName4 = SmallRepair.sln
-		SccProjectName4 = SmallRepair.Api
-		SccLocalPath4 = SmallRepair.Api
 	EndGlobalSection
 EndGlobal

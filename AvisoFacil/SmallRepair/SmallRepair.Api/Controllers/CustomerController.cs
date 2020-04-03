@@ -22,32 +22,32 @@ namespace SmallRepair.Api.Controllers
     public class CustomerController : ControllerBase
     {
 
-        public readonly CustomerBusiness _business;
+        public readonly CompanyBusiness _business;
 
-        public CustomerController(CustomerBusiness business)
+        public CustomerController(CompanyBusiness business)
         {
             _business = business;
         }
 
         // GET: api/Customer/5
         [HttpGet("{id}", Name = "GetCustomer")]
-        public ClienteViewModel Get(string id)
+        public Company Get(string id)
         {
-            Customer customer = _business.GetCustomer(id);
+            Company customer = _business.Get(id);
 
-            customer.ServiceValues = customer.ServiceValues ?? _business.GetServiceValues(customer.IdCustomer);
+            customer.ServiceValues = customer.ServiceValues ?? _business.GetServiceValues(customer.IdCompany);
 
-            return customer.ToView();
+            return customer;
         }
 
         [HttpGet("ServicoAdicional/{Id}", Name = "GetAdditionalService")]
-        public IList<ServicoAdicionalModel> GetAdditionalService(string id)
+        public IList<AdditionalService> GetAdditionalService(string id)
         {
-            Customer customer = _business.GetCustomer(id);
+            Company customer = _business.Get(id);
 
             customer.AdditionalServices = customer.AdditionalServices ?? _business.GetAdditionalServices(id);
 
-            return customer?.AdditionalServices?.ToView();
+            return customer?.AdditionalServices;
         }
     }
 }
