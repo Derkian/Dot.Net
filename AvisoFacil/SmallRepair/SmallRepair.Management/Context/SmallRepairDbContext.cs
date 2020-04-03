@@ -42,6 +42,9 @@ namespace SmallRepair.Management.Context
         public DbSet<ReportTemplate> ReportTemplates { get; set; }
 
         public DbSet<CompanyReportTemplate> CompanyReportTemplates { get; set; }
+
+        public DbSet<AssessmentVersion> AssessmentHistory { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -62,6 +65,7 @@ namespace SmallRepair.Management.Context
             modelBuilder.ApplyConfiguration(new Configuration.ServiceValueConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.ReportTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new Configuration.CompanyReportTemplateConfiguration());
+            modelBuilder.ApplyConfiguration(new Configuration.AssessmentVersionConfiguration());
         }
     }
 }

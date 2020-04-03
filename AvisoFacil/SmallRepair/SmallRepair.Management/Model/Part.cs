@@ -23,6 +23,8 @@ namespace SmallRepair.Management.Model
 
         public int Quantity { get; set; }
 
+        public double TotalTime { get; set; }
+
         public double TotalPrice { get; set; }
 
         public double TotalService { get; set; }

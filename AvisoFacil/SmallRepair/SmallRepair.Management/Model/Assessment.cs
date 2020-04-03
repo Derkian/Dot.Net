@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmallRepair.Management.Enum;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,9 +9,13 @@ namespace SmallRepair.Management.Model
     {
         public int IdAssessment { get; set; }
 
+        public int Version { get; set; }
+
         public Company Company { get; set; }
 
         public string IdCompany { get; set; }
+
+        public EnmAssessmentState State { get; set; }
 
         //Placa
         public string Plate { get; set; }
@@ -26,12 +31,21 @@ namespace SmallRepair.Management.Model
         //tipo de carroceria
         public string BodyType { get; set; }
 
-        public virtual IList<AssessmentServiceValue> AssessmentServicesValues { get; set; }
+        public virtual IList<AssessmentServiceValue> ServicesValues { get; set; }
 
         public virtual IList<Part> Parts { get; set; }
 
-        public virtual IList<AssessmentAdditionalService> AssessmentAdditionalServices { get; set; }
+        public virtual IList<AssessmentAdditionalService> AdditionalServices { get; set; }
 
         public double Total { get; set; }
+
+        public DateTime Created { get; set; }
+
+        public User Inspector { get; private set; }
+
+        public void SetInspector(User user)
+        {
+            Inspector = user;
+        }
     }
 }

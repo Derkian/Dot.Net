@@ -18,7 +18,7 @@ namespace SmallRepair.Management.Context.Configuration
                 .HasMaxLength(200);
 
             builder.HasOne(a => a.Assessment)
-                .WithMany(a => a.AssessmentAdditionalServices)
+                .WithMany(a => a.AdditionalServices)
                 .HasForeignKey(a => a.IdAssessment);
         }
     }

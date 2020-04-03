@@ -11,7 +11,7 @@ namespace SmallRepair.Management.Context.Configuration
     {
         public void Configure(EntityTypeBuilder<Assessment> builder)
         {
-            builder.HasKey(a => a.IdAssessment);
+            builder.HasKey(a => a.IdAssessment);            
 
             builder.Property(a => a.Plate)
                 .HasMaxLength(10);
@@ -31,6 +31,8 @@ namespace SmallRepair.Management.Context.Configuration
             builder.Property(a => a.BodyType)
                 .HasMaxLength(100);
 
+            builder.Ignore(a => a.Inspector);
+
             //Peças
             builder.HasMany(a => a.Parts)
                 .WithOne(a => a.Assessment)
@@ -42,9 +44,13 @@ namespace SmallRepair.Management.Context.Configuration
                 .HasForeignKey(a => a.IdCompany);
 
             //Serviço Adicional
-            builder.HasMany(a => a.AssessmentAdditionalServices)
+            builder.HasMany(a => a.AdditionalServices)
                 .WithOne(a => a.Assessment)
                 .HasForeignKey(a => a.IdAssessment);
+
+            builder.HasMany<AssessmentVersion>().WithOne().HasForeignKey(a => a.IdAssessment);
+
+
         }
     }
 }

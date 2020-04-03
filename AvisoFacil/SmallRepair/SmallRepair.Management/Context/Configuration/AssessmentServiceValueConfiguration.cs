@@ -15,7 +15,7 @@ namespace SmallRepair.Management.Context.Configuration
 
             //Valor por servico
             builder.HasOne(a => a.Assessment)
-                .WithMany(a => a.AssessmentServicesValues)
+                .WithMany(a => a.ServicesValues)
                 .HasForeignKey(a => a.IdAssessment);
         }
     }
