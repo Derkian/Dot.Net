@@ -15,18 +15,18 @@ namespace SmallRepair.Business.Model
 
     public class AssessmentSummary
     {
-        public EnmServiceType ServiceType { get; set; }
+        public EnmServiceType? ServiceType { get; set; }
 
         public string Description { get; set; }
 
-        public double AmountHours { get; set; }
+        public double? AmountHours { get; set; }
 
-        public double ValuePerHour { get; set; }
+        public double? ValuePerHour { get; set; }
 
-        public double TotalMaterial { get; set; }
+        public double? TotalMaterial { get; set; }
 
-        public double TotalService { get; set; }
+        public double? TotalService { get; set; }
 
-        public double Total { get; set; }
+        public double? Total { get; set; }
     }
 }

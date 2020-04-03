@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RazorLight;
+using SelectPdf;
 using SmallRepair.Business.Model;
-using SmallRepair.Management.Context;
+using SmallRepair.Business.Util;
 using SmallRepair.Management.Enum;
 using SmallRepair.Management.Model;
 using SmallRepair.Management.Repository;
@@ -9,20 +10,31 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Net.Mime;
 using System.Threading.Tasks;
+
+using Newtonsoft.Json;
 
 namespace SmallRepair.Business
 {
     public class AssessmentBusiness : BaseBussiness
     {
+        #region VARIAVEIS
 
-        public AssessmentBusiness(RepositoryEntity repository)
+        public readonly Email _email;
+
+        #endregion
+
+        #region CONSTRUTOR
+        public AssessmentBusiness(RepositoryEntity repository, Email email)
             : base(repository)
         {
+            _email = email;
         }
+        #endregion
 
-        public ResponseMessage<Assessment> Add(Assessment assessment)
+        #region PUBLICOS
+        public ResponseMessage<Assessment> CreateAssessment(Assessment assessment)
         {
             ResponseMessage<Assessment> assessmentResult = null;
 
@@ -34,9 +46,9 @@ namespace SmallRepair.Business
                 if (customer != null)
                 {
                     //adiciona o valor por serviço do cliente do orçamento
-                    if (assessment.AssessmentServicesValues == null || assessment.AssessmentServicesValues.Count() == 0)
+                    if (assessment.ServicesValues == null || assessment.ServicesValues.Count() == 0)
                     {
-                        assessment.AssessmentServicesValues =
+                        assessment.ServicesValues =
                             _repository.All<ServiceValue>(a => a.IdCompany == customer.IdCompany)
                             .Select(a => new AssessmentServiceValue()
                             {
@@ -44,6 +56,11 @@ namespace SmallRepair.Business
                                 Value = a.Value
                             }).ToList();
                     }
+
+                    assessment.State = EnmAssessmentState.InProgress;
+
+                    //Data de Criação
+                    assessment.Created = DateTime.Now;
 
                     //cria o orçamento
                     _repository.Add(assessment);
@@ -57,13 +74,13 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                assessmentResult = ResponseMessage<Assessment>.Fault(new string[] { ex.Message });
+                assessmentResult = ResponseMessage<Assessment>.Fault(ex.StackTrace);
             }
 
             return assessmentResult;
         }
 
-        public ResponseMessage<AssessmentReport> AssessmentSummary(Assessment assessment)
+        public ResponseMessage<AssessmentReport> GetAssessmentSummary(Assessment assessment)
         {
             ResponseMessage<AssessmentReport> responseMessage = null;
 
@@ -74,41 +91,23 @@ namespace SmallRepair.Business
                 if (findResult.Sucess)
                 {
                     var assessmentDb = findResult.Object;
-                    var service = assessmentDb.Parts.SelectMany(x => x.Services, (part, servico) => new Service()
+
+                    if (assessmentDb.Version != assessment.Version)
                     {
-                        ServiceType = servico.ServiceType,
-                        Time = servico.Time,
-                        ValuePerHour = servico.ValuePerHour,
-                        MaterialValue = servico.MaterialValue,
-                        Value = servico.Value,
-                        Total = servico.Total
-                    })
-                    .GroupBy(x => x.ServiceType)
-                    .Select(x => new AssessmentSummary
-                    {
-                        ServiceType = x.Key,
-                        Description = Enum.GetName(typeof(EnmServiceType), x.Key),
-                        AmountHours = x.Sum(a => a.Time),
-                        TotalService = x.Sum(a => a.Value),
-                        TotalMaterial = x.Sum(a => a.MaterialValue),
-                        Total = x.Sum(a => a.Total),
-                        ValuePerHour = x.Sum(a => a.ValuePerHour)
-                    })
-                    .ToList();
+                        var resultVersion = this.GetVersion(assessment);
 
-                    var parts = assessmentDb.Parts.Sum(a => a.TotalPrice);
-                    var additionalParts = assessmentDb.AssessmentAdditionalServices.Sum(a => a.Value);
+                        if (!resultVersion.Sucess)
+                            return ResponseMessage<AssessmentReport>.Fault(resultVersion.Error.ToArray());
 
-                    service.Add(new AssessmentSummary() { Description = "Parts", Total = parts });
-                    service.Add(new AssessmentSummary() { Description = "AdditionalService", Total = additionalParts });
+                        assessmentDb = resultVersion.Object;
+                    }
 
-                    var assessmentReport = new AssessmentReport()
-                    {
-                        Assessment = assessmentDb,
-                        Summaries = service
-                    };
+                    var resultSummary = this.CreateSummary(assessmentDb);
 
-                    responseMessage = ResponseMessage<AssessmentReport>.Ok(assessmentReport);
+                    if (!resultSummary.Sucess)
+                        return ResponseMessage<AssessmentReport>.Fault(resultSummary.Error.ToArray());
+
+                    responseMessage = ResponseMessage<AssessmentReport>.Ok(resultSummary.Object);
 
                 }
                 else
@@ -116,51 +115,130 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<AssessmentReport>.Fault(ex.Message);
+                responseMessage = ResponseMessage<AssessmentReport>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
         }
 
-        //public ResponseMessage<Assessment> Update(Assessment assessment)
-        //{
-        //    ResponseMessage<Assessment> assessmentResult = null;
+        public ResponseMessage<bool> CreateVersion(Assessment assessment, User user)
+        {
+            ResponseMessage<bool> responseMessage = null;
 
-        //    try
-        //    {
-        //        //consulta o cliente
-        //        Assessment assessmentDb = _repository.Find<Assessment>(assessment.IdAssessment);                
+            try
+            {
+                Assessment assessmentDb = Find(assessment).Object;
 
-        //        if (assessmentDb != null)
-        //        {
-        //            //cria o orçamento
-        //            _repository.Update(assessment);
+                if (assessmentDb == null || assessmentDb.State != EnmAssessmentState.Complete)
+                    return ResponseMessage<bool>.Fault("Orçamento não encontrado.");
 
-        //            //commit
-        //            _repository.SaveChanges();
+                assessmentDb.Version += 1;
+                assessmentDb.State = EnmAssessmentState.InProgress;
 
-        //            //objeto de retorno
-        //            assessmentResult = ResponseMessage<Assessment>.Ok(assessment);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        assessmentResult = ResponseMessage<Assessment>.Fault(new string[] { ex.Message });
-        //    }
+                string assessmentJson = JsonConvert.SerializeObject(assessmentDb, new JsonSerializerSettings()
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
+                });
 
-        //    return assessmentResult;
-        //}
+                //criar o histórico
+                var assessmentHistory = new AssessmentVersion()
+                {
+                    IdAssessment = assessmentDb.IdAssessment,
+                    ChangeDate = DateTime.Now,
+                    Type = EnmAssessmentVersion.NewVersion,
+                    IdUser = user.IdUser,
+                    Email = user.Email,
+                    Total = assessmentDb.Total,
+                    AssessmentData = assessmentJson,
+                    Version = assessmentDb.Version
+                };
 
-        public ResponseMessage<Pagination<Assessment>> List(Pagination<Assessment> page, Company customer)
+                //adicionar histórico
+                _repository.Add(assessmentHistory);
+
+                _repository.Update(assessmentDb);
+
+                _repository.SaveChanges();
+
+
+                responseMessage = ResponseMessage<bool>.Ok(true);
+
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ResponseMessage<bool>.Fault(ex.StackTrace);
+            }
+
+            return responseMessage;
+        }
+
+        public ResponseMessage<Assessment> UpdateAssessment(Assessment assessment, User user)
+        {
+            ResponseMessage<Assessment> assessmentResult = null;
+
+            try
+            {
+                //consulta o cliente
+                Assessment assessmentDb = Find(assessment).Object;
+
+                if (assessmentDb != null)
+                {
+                    assessmentDb.State = EnmAssessmentState.Complete;
+
+                    //update assessent
+                    _repository.Update(assessmentDb);
+
+                    string assessmentJson = JsonConvert.SerializeObject(assessmentDb, new JsonSerializerSettings()
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+
+                    //criar o histórico
+                    var assessmentHistory = new AssessmentVersion()
+                    {
+                        IdAssessment = assessmentDb.IdAssessment,
+                        ChangeDate = DateTime.Now,
+                        Type = EnmAssessmentVersion.AssessmentComplete,
+                        IdUser = user.IdUser,
+                        Email = user.Email,
+                        Total = assessmentDb.Total,
+                        AssessmentData = assessmentJson,
+                        Version = assessmentDb.Version
+                    };
+
+                    //adicionar histórico
+                    _repository.Add(assessmentHistory);
+
+                    //commit
+                    _repository.SaveChanges();
+
+                    //objeto de retorno
+                    assessmentResult = ResponseMessage<Assessment>.Ok(assessment);
+                }
+            }
+            catch (Exception ex)
+            {
+                assessmentResult = ResponseMessage<Assessment>.Fault(ex.StackTrace);
+            }
+
+            return assessmentResult;
+        }
+
+        public ResponseMessage<Pagination<Assessment>> List(Pagination<Assessment> page, Search search)
         {
             ResponseMessage<Pagination<Assessment>> pageResult = null;
 
             try
             {
+                var conditions = search.GetFunc();
+
                 var assessmentsList = _repository.Context
                                                  .Assessments
                                                  .Include(a => a.Parts)
-                                                 .Where(a => a.IdCompany == customer.IdCompany)
+                                                 .Include(a => a.ServicesValues)
+                                                 .Where(conditions)
                                                  .OrderByDescending(a => a.IdAssessment)
                                                  .ToList();
 
@@ -176,7 +254,7 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                pageResult = ResponseMessage<Pagination<Assessment>>.Fault(new string[] { ex.Message });
+                pageResult = ResponseMessage<Pagination<Assessment>>.Fault(ex.StackTrace);
             }
 
             return pageResult;
@@ -190,10 +268,14 @@ namespace SmallRepair.Business
             {
                 Assessment assessmentDb = _repository.Context
                                                 .Assessments
-                                                .Include(a => a.AssessmentAdditionalServices)
+                                                .Include(a => a.AdditionalServices)
                                                 .Include(a => a.Company)
-                                                .Include(a => a.AssessmentServicesValues)
-                                                .FirstOrDefault(a => a.IdAssessment == assessment.IdAssessment && a.IdCompany == assessment.IdCompany);
+                                                .Include(a => a.ServicesValues)
+                                                .FirstOrDefault
+                                                (
+                                                    a => a.IdAssessment == assessment.IdAssessment
+                                                    && a.IdCompany == assessment.IdCompany
+                                                );
 
                 if (assessmentDb == null)
                     return ResponseMessage<Assessment>.Fault("Orçamento não encontrado.");
@@ -202,13 +284,14 @@ namespace SmallRepair.Business
                                                 .Parts
                                                 .Include(a => a.Services)
                                                 .Where(a => a.IdAssessment == assessmentDb.IdAssessment)
+                                                .OrderByDescending(a => a.MalfunctionType)
                                                 .ToList();
 
                 responseMessage = ResponseMessage<Assessment>.Ok(assessmentDb);
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<Assessment>.Fault(ex.Message);
+                responseMessage = ResponseMessage<Assessment>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
@@ -222,11 +305,16 @@ namespace SmallRepair.Business
             {
                 Catalog catalog = null;
 
-                assessment = _repository.Find<Assessment>(assessment.IdAssessment);
+                assessment = Find(assessment).Object;
+
+                if (assessment == null)
+                    return ResponseMessage<Part>.Fault("Orçamento não encontrado.");
+                else if (assessment.State == EnmAssessmentState.Complete)
+                    return ResponseMessage<Part>.Fault("Orçamento finalizado.");
 
                 //lista o valor por serviço
                 IList<AssessmentServiceValue> assessmentServiceValues =
-                                                                assessment.AssessmentServicesValues ??
+                                                                assessment.ServicesValues ??
                                                                 _repository.All<AssessmentServiceValue>(a => a.IdAssessment == assessment.IdAssessment).ToList();
 
                 //consulta o tempo por baremo
@@ -287,6 +375,9 @@ namespace SmallRepair.Business
                     partAdd.Services.Add(service);
                 }
 
+                //Tempo Total
+                partAdd.TotalTime = partAdd.Services.Sum(a => a.Time);
+
                 //Total Material
                 partAdd.TotalMaterial = partAdd.Services.Sum(a => a.MaterialValue);
 
@@ -294,8 +385,9 @@ namespace SmallRepair.Business
                 partAdd.TotalService = partAdd.Services.Sum(a => a.Value);
 
                 //total da peça
-                partAdd.Total = partAdd.TotalService + partAdd.TotalMaterial;
-
+                partAdd.Total = partAdd.TotalPrice +
+                                partAdd.TotalService +
+                                partAdd.TotalMaterial;
 
                 if (addPart)
                     _repository.Add<Part>(partAdd);
@@ -319,7 +411,7 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<Part>.Fault(ex.Message);
+                responseMessage = ResponseMessage<Part>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
@@ -331,6 +423,13 @@ namespace SmallRepair.Business
 
             try
             {
+                assessment = Find(assessment).Object;
+
+                if (assessment == null)
+                    return ResponseMessage<bool>.Fault("Orçamento não encontrado.");
+                else if (assessment.State == EnmAssessmentState.Complete)
+                    return ResponseMessage<bool>.Fault("Orçamento finalizado.");
+
                 Part partRemove = _repository.All<Part>(pa => pa.IdPart == part.IdPart && pa.IdAssessment == assessment.IdAssessment).FirstOrDefault();
 
                 if (partRemove == null)
@@ -355,7 +454,7 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<bool>.Fault(ex.Message);
+                responseMessage = ResponseMessage<bool>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
@@ -369,36 +468,36 @@ namespace SmallRepair.Business
             {
                 Assessment assessmentDb = Find(assessment).Object;
 
-                if (assessmentDb != null)
+                if (assessmentDb == null)
+                    return ResponseMessage<AssessmentAdditionalService>.Fault("Orçamento não encontrado.");
+                else if (assessmentDb.State == EnmAssessmentState.Complete)
+                    return ResponseMessage<AssessmentAdditionalService>.Fault("Orçamento finalizado.");
+
+
+                AssessmentAdditionalService assessmentAdditionalService = new AssessmentAdditionalService()
                 {
-                    AssessmentAdditionalService assessmentAdditionalService = new AssessmentAdditionalService()
-                    {
-                        IdAssessment = assessmentDb.IdAssessment,
-                        Value = additionalService.Value,
-                        Description = additionalService.Description
-                    };
+                    IdAssessment = assessmentDb.IdAssessment,
+                    Value = additionalService.Value,
+                    Description = additionalService.Description
+                };
 
-                    //add addtional service
-                    assessmentDb.AssessmentAdditionalServices.Add(assessmentAdditionalService);
+                //add addtional service
+                assessmentDb.AdditionalServices.Add(assessmentAdditionalService);
 
-                    //update assessment
-                    _repository.Add<AssessmentAdditionalService>(assessmentAdditionalService);
+                //update assessment
+                _repository.Add<AssessmentAdditionalService>(assessmentAdditionalService);
 
-                    //commit
-                    _repository.SaveChanges();
+                //commit
+                _repository.SaveChanges();
 
-                    //calcular orcamento
-                    this.Calculate(assessmentDb);
+                //calcular orcamento
+                this.Calculate(assessmentDb);
 
-                    responseMessage = ResponseMessage<AssessmentAdditionalService>.Ok(assessmentAdditionalService);
-                }
-                else
-                    responseMessage = ResponseMessage<AssessmentAdditionalService>.Ok(null);
-
+                responseMessage = ResponseMessage<AssessmentAdditionalService>.Ok(assessmentAdditionalService);
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<AssessmentAdditionalService>.Fault(ex.Message);
+                responseMessage = ResponseMessage<AssessmentAdditionalService>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
@@ -410,6 +509,13 @@ namespace SmallRepair.Business
 
             try
             {
+                assessment = Find(assessment).Object;
+
+                if (assessment == null)
+                    return ResponseMessage<bool>.Fault("Orçamento não encontrado.");
+                else if (assessment.State == EnmAssessmentState.Complete)
+                    return ResponseMessage<bool>.Fault("Orçamento finalizado.");
+
                 AssessmentAdditionalService additionaltRemove = _repository
                     .All<AssessmentAdditionalService>(
                                                         pa => pa.IdAssessment == assessment.IdAssessment &&
@@ -432,7 +538,7 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<bool>.Fault(ex.Message);
+                responseMessage = ResponseMessage<bool>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
@@ -446,59 +552,89 @@ namespace SmallRepair.Business
             {
                 Assessment assessmentDb = Find(assessment).Object;
 
-                if (assessmentDb != null)
-                {
-                    part.IdAssessment = assessmentDb.IdAssessment;
+                if (assessmentDb == null)
+                    return ResponseMessage<Part>.Fault("Orçamento não encontrado.");
+                else if (assessmentDb.State == EnmAssessmentState.Complete)
+                    return ResponseMessage<Part>.Fault("Orçamento finalizado.");
 
-                    part.TotalPrice = part.UnitaryValue * part.Quantity;
 
-                    _repository.Add<Part>(part);
+                part.IdAssessment = assessmentDb.IdAssessment;
 
-                    _repository.SaveChanges();
+                part.TotalPrice = part.UnitaryValue * part.Quantity;
 
-                    assessmentDb = this.Calculate(assessmentDb).Object;
-                }
+                part.Total = part.TotalPrice;
+
+                _repository.Add<Part>(part);
+
+                _repository.SaveChanges();
+
+                assessmentDb = this.Calculate(assessmentDb).Object;
 
                 responseMessage = ResponseMessage<Part>.Ok(part);
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<Part>.Fault(ex.Message);
+                responseMessage = ResponseMessage<Part>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
         }
+        #endregion
 
+        #region PUBLICOS ASYNC
         public async Task<ResponseMessage<string>> ReportHTMLAsync(Assessment assessment, string IdCompany, string reportCode)
         {
-            ResponseMessage<string> responseMessage = null;
+            ResponseMessage<string> responseMessage;
 
             try
             {
                 string _template = string.Empty;
                 ReportTemplate reportTemplate;
+                Assessment assessmentReport = null;
 
                 var companyReportTemplate = _repository
                                         .All<CompanyReportTemplate>(a => a.IdCompany == IdCompany &&
                                                                          a.Code.ToUpper().Equals(reportCode.ToUpper()))
                                         .FirstOrDefault();
 
+
                 if (companyReportTemplate == null)
                 {
                     reportTemplate = _repository.All<ReportTemplate>(a => a.Code.ToUpper().Equals(reportCode)).FirstOrDefault();
-                    _template = reportTemplate.Template;
+                    _template = reportTemplate.Template ?? "";
                 }
                 else
-                    _template = companyReportTemplate.Template;
+                    _template = companyReportTemplate.Template ?? "";
+
+                if (string.IsNullOrEmpty(_template))
+                    return ResponseMessage<string>.Fault("Não existe template cadastrado.");
+
+                //CONSULTA O ASSESSMENT NA BASE DE DADOS
+                var assessmentDb = Find(assessment);
+
+                if (!assessmentDb.Sucess)
+                    return ResponseMessage<string>.Fault(assessmentDb.Error.ToArray());
+
+                //CONSULTA A VERSÃO NO HISTÓRICO
+                if (assessmentDb.Object.Version == assessment.Version)
+                    assessmentReport = assessmentDb.Object;
+                else
+                {
+                    var assessmentJson = this.GetVersion(assessment);
+
+                    if (!assessmentJson.Sucess)
+                        return ResponseMessage<string>.Fault(assessmentJson.Error.ToArray());
+
+                    assessmentReport = assessmentJson.Object;
+                }
 
                 //RECUPERA O SUMÁRIO DO ASSESSMENT
-                var result = this.AssessmentSummary(assessment);
+                var result = this.CreateSummary(assessmentReport);
 
                 if (!result.Sucess)
                     return ResponseMessage<string>.Fault(result.Error.ToArray());
 
-
-                var engine = new RazorLightEngineBuilder()                  
+                var engine = new RazorLightEngineBuilder()
                   .UseEmbeddedResourcesProject(typeof(AssessmentBusiness))
                   .UseMemoryCachingProvider()
                   .Build();
@@ -519,37 +655,85 @@ namespace SmallRepair.Business
                                                                 string idCompany,
                                                                 string reportCode)
         {
-            ResponseMessage<Stream> responseMessage = null;
+            ResponseMessage<Stream> responseMessage = ResponseMessage<Stream>.Fault("");
 
             try
             {
                 var reportHTML = await this.ReportHTMLAsync(assessment, idCompany, reportCode);
 
-                if (reportHTML.Sucess)
-                {
-                    var Renderer = new IronPdf.HtmlToPdf(new IronPdf.PdfPrintOptions()
-                    {
-                        //millimeters
-                        MarginTop = 10,  
-                        MarginBottom = 10,
-                        MarginLeft = 10,
-                        MarginRight = 10,
-                        PaperSize = IronPdf.PdfPrintOptions.PdfPaperSize.A4
-                    });
+                if (!reportHTML.Sucess)
+                    return ResponseMessage<Stream>.Fault(reportHTML.Error.ToArray());
 
-                    var pdfDocument = Renderer.RenderHtmlAsPdf(reportHTML.Object);
+                var stream = new MemoryStream();
 
-                    responseMessage = ResponseMessage<Stream>.Ok(pdfDocument.Stream);
-                }
+                // instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+
+                // set converter options
+                converter.Options.PdfPageSize = PdfPageSize.A4;
+                converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
+                converter.Options.MarginTop = 10;
+                converter.Options.MarginBottom = 10;
+                converter.Options.MarginLeft = 10;
+                converter.Options.MarginRight = 10;
+
+                // create a new pdf document converting an url
+                PdfDocument doc = converter.ConvertHtmlString(reportHTML.Object, "");
+
+                // save pdf document
+                doc.Save(stream);
+
+                stream.Position = 0;
+
+                // close pdf document
+                doc.Close();
+
+                responseMessage = ResponseMessage<Stream>.Ok(stream);
+
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<Stream>.Fault(ex.Message);
+                responseMessage = ResponseMessage<Stream>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
         }
 
+        public async Task<ResponseMessage<bool>> SendReportByEmail(List<string> To, Assessment assessment, string reportCode)
+        {
+            ResponseMessage<bool> responseMessage = ResponseMessage<bool>.Ok(false);
+            try
+            {
+                assessment = Find(assessment).Object;
+
+                var resultReportPDF = await ReportPDFAsync(assessment, assessment.IdCompany, reportCode);
+
+                if (resultReportPDF.Sucess)
+                {
+                    var attachament = new List<Attachament>();
+
+                    attachament.Add(new Attachament()
+                    {
+                        File = resultReportPDF.Object,
+                        FileName = $"Orcamento_{assessment.Plate}_V{assessment.Version}.pdf",
+                        MediaTypeNames = MediaTypeNames.Application.Pdf
+                    });
+
+                    var result = _email.Send(To, null, $"Pequenos Reparos - Orçamento {assessment.Plate}", "", attachament);
+
+                    responseMessage = ResponseMessage<bool>.Ok(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ResponseMessage<bool>.Fault(ex.StackTrace);
+            }
+
+            return responseMessage;
+        }
+        #endregion
+
+        #region PRIVATE
         private ResponseMessage<Assessment> Calculate(Assessment assessment)
         {
             ResponseMessage<Assessment> responseMessage;
@@ -558,8 +742,8 @@ namespace SmallRepair.Business
             {
                 Assessment assessmentDb = _repository.Context
                                                 .Assessments
-                                                .Include(a => a.AssessmentAdditionalServices)
-                                                .Include(a => a.AssessmentServicesValues)
+                                                .Include(a => a.AdditionalServices)
+                                                .Include(a => a.ServicesValues)
                                                 .FirstOrDefault(a => a.IdAssessment == assessment.IdAssessment);
 
                 if (assessmentDb == null)
@@ -572,7 +756,7 @@ namespace SmallRepair.Business
                                                 .ToList();
 
                 assessmentDb.Total = assessmentDb.Parts.Sum(a => a.TotalPrice + a.TotalMaterial + a.TotalService) +
-                                     assessmentDb.AssessmentAdditionalServices.Sum(a => a.Value);
+                                     assessmentDb.AdditionalServices.Sum(a => a.Value);
 
                 //update
                 _repository.Update(assessmentDb);
@@ -584,11 +768,104 @@ namespace SmallRepair.Business
             }
             catch (Exception ex)
             {
-                responseMessage = ResponseMessage<Assessment>.Fault(ex.Message);
+                responseMessage = ResponseMessage<Assessment>.Fault(ex.StackTrace);
             }
 
             return responseMessage;
 
         }
+
+        private ResponseMessage<AssessmentReport> CreateSummary(Assessment assessmentDb)
+        {
+            ResponseMessage<AssessmentReport> responseMessage = null;
+
+            try
+            {
+                var service = assessmentDb?.Parts?.SelectMany(x => x.Services, (part, servico) => new Service()
+                {
+                    ServiceType = servico.ServiceType,
+                    Time = servico.Time,
+                    ValuePerHour = servico.ValuePerHour,
+                    MaterialValue = servico.MaterialValue,
+                    Value = servico.Value,
+                    Total = servico.Total
+                })
+                .GroupBy(x => x.ServiceType)
+                .Select(x => new AssessmentSummary
+                {
+                    ServiceType = x.Key,
+                    Description = Enum.GetName(typeof(EnmServiceType), x.Key),
+                    AmountHours = x.Where(a => a.Time > 0)?.Sum(a => a.Time),
+                    TotalService = x.Where(a => a.Value > 0)?.Sum(a => a.Value),
+                    TotalMaterial = x.Sum(a => a.MaterialValue) > 0 ? x.Sum(a => a.MaterialValue) : new double?(),
+                    Total = x.Where(a => a.Total > 0)?.Sum(a => a.Total),
+                    ValuePerHour = x.FirstOrDefault().ValuePerHour
+                })
+                .ToList();
+
+                var parts = assessmentDb?.Parts?.Sum(a => a.TotalPrice);
+                var additionalParts = assessmentDb?.AdditionalServices?.Sum(a => a.Value);
+                var material = service?.Where(a => a.TotalMaterial > 0)?.Sum(a => a.TotalMaterial);
+
+                service.Add(new AssessmentSummary() { Description = "Parts", Total = parts });
+                service.Add(new AssessmentSummary() { Description = "AdditionalService", Total = additionalParts });
+                service.Add(new AssessmentSummary() { Description = "Material", Total = material });
+
+                var assessmentReport = new AssessmentReport()
+                {
+                    Assessment = assessmentDb,
+                    Summaries = service
+                };
+
+                responseMessage = ResponseMessage<AssessmentReport>.Ok(assessmentReport);
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ResponseMessage<AssessmentReport>.Fault(ex.StackTrace);
+            }
+
+            return responseMessage;
+        }
+
+        private ResponseMessage<Assessment> GetVersion(Assessment assessment)
+        {
+            ResponseMessage<Assessment> responseMessage = null;
+
+            try
+            {
+                var assessmentJson = _repository
+                                        .All<AssessmentVersion>(
+                                            a => a.IdAssessment == assessment.IdAssessment &&
+                                            a.Version == assessment.Version &&
+                                            a.Type == EnmAssessmentVersion.AssessmentComplete
+                                        )
+                                        .OrderBy(a => a.ChangeDate)
+                                        .FirstOrDefault();
+
+                if (assessmentJson == null)
+                    return ResponseMessage<Assessment>.Fault("Versão não encontrada.");
+
+                var assessmentReport = JsonConvert.DeserializeObject<Assessment>(assessmentJson.AssessmentData);
+
+                var inspector = _repository.All<User>(a => a.IdUser == assessmentJson.IdUser)
+                                            .Select(a => new User() { Name = a.Name, Email = a.Email, IdUser = a.IdUser })
+                                            .FirstOrDefault();
+
+                inspector = inspector ?? new User() { Email = assessmentJson.Email, IdUser = assessmentJson.IdUser };
+
+                assessmentReport.SetInspector(inspector);
+
+                responseMessage = ResponseMessage<Assessment>.Ok(assessmentReport);
+
+            }
+            catch (Exception ex)
+            {
+                responseMessage = ResponseMessage<Assessment>.Fault(ex.Message);
+            }
+
+            return responseMessage;
+        }
+
+        #endregion
     }
 }

@@ -23,7 +23,7 @@ namespace SmallRepair.Business
         public IList<AdditionalService> GetAdditionalServices(string idCustomer)
         {
             return _repository
-                    .All<AdditionalService>(a => a.IdCustomer == idCustomer)
+                    .All<AdditionalService>(a => a.IdCompany == idCustomer)
                     .ToList();
         }
 
