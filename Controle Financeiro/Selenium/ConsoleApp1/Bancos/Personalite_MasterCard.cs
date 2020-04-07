@@ -61,7 +61,7 @@ public static class Personalite_MasterCard
                 UI.WaitPageLoad(driver);
 
 
-                UI.Wait(5);
+                UI.Wait(10);
 
                 // ------------------------------------------------------------------------------------------------------------------------------
                 // Recupera o JSON dos lançamentos

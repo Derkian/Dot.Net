@@ -61,7 +61,7 @@ public static class Itau
                 UI.WaitPageLoad(driver);
 
                 
-                UI.Wait(5);
+                UI.Wait(10);
 
 
 
