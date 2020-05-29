@@ -115,6 +115,9 @@ public static class Itau
                     }
                 }
 
+
+                UI.ClickWithJavascript(driver, executor, By.ClassName("mfp-close"));                
+
                 UI.Click(driver, By.Id("linkSairHeader")); // Sair
                 UI.WaitPageLoad(driver);
                 UI.Wait(2);

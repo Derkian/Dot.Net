@@ -5,6 +5,9 @@ using System.IO;
 using System.Diagnostics;
 using ConsoleApp1.Models;
 using System.Linq;
+using System.Net;
+using System.Text;
+using System.IO.Compression;
 
 namespace ConsoleApp1
 {
@@ -47,7 +50,6 @@ namespace ConsoleApp1
                     }
                 }
 
-
                 // Inicia as classes
                 var extratos = new List<Extrato>();
                 var classes = new List<Type>();
@@ -66,16 +68,6 @@ namespace ConsoleApp1
 
                     extratos.AddRange(imported);
                 }
-
-                //Parallel.ForEach(classes, classe =>
-                //{
-                //    var imported = (List<Extrato>)classe.GetMethod("Sync").Invoke(null, aParams);
-
-                //    lock (locker)
-                //    {
-                //        extratos.AddRange(imported);
-                //    }
-                //});
 
                 if (extratos.Count > 0)
                 {
@@ -99,6 +91,8 @@ namespace ConsoleApp1
             }
             catch (Exception ex)
             {
+                UpdateChromeDrive();
+
                 Console.WriteLine("Message => " + ex.Message);
                 Console.WriteLine("StackTrace =>" + ex.StackTrace);
                 if (ex.InnerException != null)
@@ -111,5 +105,64 @@ namespace ConsoleApp1
             }
         }
 
+        private static void UpdateChromeDrive()
+        {
+            try
+            {
+                if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Google", "Chrome", "Application", "chrome.exe")))
+                {
+                    FileVersionInfo chormeVersion = FileVersionInfo.GetVersionInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Google", "Chrome", "Application", "chrome.exe"));
+
+                    string versaoChrome = chormeVersion.FileVersion;
+                    string urlAddress = "https://chromedriver.storage.googleapis.com/?delimiter=/&prefix=";
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        Stream receiveStream = response.GetResponseStream();
+                        StreamReader readStream = null;
+
+                        if (String.IsNullOrWhiteSpace(response.CharacterSet))
+                            readStream = new StreamReader(receiveStream);
+                        else
+                            readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+
+                        System.Data.DataSet dsTeste = new System.Data.DataSet();
+                        dsTeste.ReadXml(readStream);
+
+                        if (dsTeste.Tables.Contains("CommonPrefixes"))
+                        {
+                            foreach (System.Data.DataRow dataRow in dsTeste.Tables["CommonPrefixes"].Rows)
+                            {
+                                if (dataRow["Prefix"].ToString().Contains(versaoChrome.Substring(0, (versaoChrome.LastIndexOf(".") - 1))))
+                                {
+                                    using (var download = new WebClient())
+                                    {
+                                        string urlDownload = $"https://chromedriver.storage.googleapis.com/{dataRow["Prefix"].ToString()}chromedriver_win32.zip";
+                                        string pathDownload = Path.Combine(Path.GetTempFileName().Replace(".tmp", ".zip"));
+                                        download.DownloadFile(urlDownload, pathDownload);
+
+                                        if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chromedriver.exe")))
+                                        {
+                                            File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "chromedriver.exe"));
+                                        }
+
+                                        ZipFile.ExtractToDirectory(pathDownload, AppDomain.CurrentDomain.BaseDirectory);
+                                    }
+                                }
+                            }
+                        }
+
+                        response.Close();
+                        readStream.Close();
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
     }
 }

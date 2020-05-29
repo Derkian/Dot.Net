@@ -90,46 +90,49 @@ public static class Personalite_MasterCard
                     {
                         if (!UI.JsonNullOrEmpty(faturaFechada["status"]))
                         {
-                            if (faturaFechada["status"].ToString().Equals("fechada", StringComparison.InvariantCulture))
+                            if (faturaFechada["status"].ToString().Equals("fechada", StringComparison.InvariantCulture) ||
+                                faturaFechada["status"].ToString().Equals("abertaAnteriorNaoPaga", StringComparison.InvariantCulture))
                             {
                                 var dataFechamentoFatura = DateTime.ParseExact(faturaFechada["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                 var dataVencimentoFatura = DateTime.ParseExact(faturaFechada["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                                if (DateTime.Now > dataFechamentoFatura && DateTime.Now < dataVencimentoFatura)
+                                //if (DateTime.Now > dataFechamentoFatura && DateTime.Now < dataVencimentoFatura)
+                                //{
+                                var titularidades = faturaFechada["lancamentosNacionais"]["titularidades"];
+
+                                foreach (var titularidade in titularidades)
                                 {
-                                    var titularidades = faturaFechada["lancamentosNacionais"]["titularidades"];
+                                    var lancamentos = titularidade["lancamentos"];
 
-                                    foreach (var titularidade in titularidades)
+                                    foreach (var lancamento in lancamentos)
                                     {
-                                        var lancamentos = titularidade["lancamentos"];
+                                        var data = DateTime.ParseExact(lancamento["data"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-                                        foreach (var lancamento in lancamentos)
+                                        var extrato = new Extrato();
+                                        extrato.conta = conta.nome;
+                                        extrato.data = data;
+                                        extrato.descricao = ExtratoHelper.GetDescricao(lancamento["descricao"].ToString());
+
+                                        if (!string.IsNullOrEmpty(extrato.descricao))
                                         {
-                                            var data = DateTime.ParseExact(lancamento["data"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                            var valor = decimal.Parse(lancamento["valor"].ToString(), NumberStyles.Currency, cultureBR);
 
-                                            var extrato = new Extrato();
-                                            extrato.conta = conta.nome;
-                                            extrato.data = data;
-                                            extrato.descricao = ExtratoHelper.GetDescricao(lancamento["descricao"].ToString());
+                                            if (lancamento["sinalValor"].ToString().ToUpper(CultureInfo.InvariantCulture) == "+")
+                                                extrato.debito = Math.Abs(valor) * -1;
+                                            else
+                                                extrato.credito = valor;
 
-                                            if (!string.IsNullOrEmpty(extrato.descricao))
-                                            {
-                                                var valor = decimal.Parse(lancamento["valor"].ToString(), NumberStyles.Currency, cultureBR);
-
-                                                if (lancamento["sinalValor"].ToString().ToUpper(CultureInfo.InvariantCulture) == "+")
-                                                    extrato.debito = Math.Abs(valor) * -1;
-                                                else
-                                                    extrato.credito = valor;
-
-                                                ExtratoHelper.AddExtrato(ref extratos, extrato);
-                                            }
+                                            ExtratoHelper.AddExtrato(ref extratos, extrato);
                                         }
                                     }
                                 }
+                                //}
                             }
                         }
                     }
                 }
+
+                UI.ClickWithJavascript(driver, executor, By.ClassName("mfp-close"));
 
                 UI.Click(driver, By.Id("linkSairHeader")); // Sair
                 UI.WaitPageLoad(driver);
