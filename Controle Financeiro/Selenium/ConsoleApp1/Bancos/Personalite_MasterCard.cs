@@ -91,7 +91,7 @@ public static class Personalite_MasterCard
                         if (!UI.JsonNullOrEmpty(faturaFechada["status"]))
                         {
                             if (faturaFechada["status"].ToString().Equals("fechada", StringComparison.InvariantCulture) ||
-                                faturaFechada["status"].ToString().Equals("abertaAnteriorNaoPaga", StringComparison.InvariantCulture))
+                                faturaFechada["status"].ToString().Equals("aberta", StringComparison.InvariantCulture))
                             {
                                 var dataFechamentoFatura = DateTime.ParseExact(faturaFechada["dataFechamentoFatura"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
                                 var dataVencimentoFatura = DateTime.ParseExact(faturaFechada["dataVencimento"].ToString(), "yyyy-MM-dd", CultureInfo.InvariantCulture);
