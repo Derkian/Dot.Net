@@ -77,7 +77,8 @@ public static class Personalite_MasterCard
                 string html = UI.GetRequestHtml(HttpMethod.Post, url, xauthtoken, op);
                 html = html.Substring(html.IndexOf("self.init", StringComparison.InvariantCulture));
                 html = html.Substring(html.IndexOf("url", StringComparison.InvariantCulture) + 6);
-                var op2 = html.Substring(0, html.IndexOf("\"", StringComparison.InvariantCulture)); // 15 dias, não vai usar
+                var op2 = html.Substring(0, html.IndexOf("\n", StringComparison.InvariantCulture));
+                op2 = op2.Substring(0, op2.LastIndexOf(";", StringComparison.InvariantCulture)).Replace("tingencia = \"", "").Replace("\"", ""); // 15 dias, não vai usar
 
                 var json = UI.GetRequestJson(HttpMethod.Post, url, xauthtoken, op2);
                 var dados = json["object"]["data"];
