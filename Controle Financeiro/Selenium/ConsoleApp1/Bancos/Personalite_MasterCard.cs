@@ -70,9 +70,7 @@ public static class Personalite_MasterCard
                 var url = driver.Url.Replace("#30horas", "");
                 var cookies = UI.GetCookies(executor);
                 var xauthtoken = cookies.First(x => x.Key == "X-AUTH-TOKEN").Value;
-                var op = driver.FindElement(By.XPath("/html/body/header/div[3]/nav/ul/li/div/div/div[2]/ul[2]/li[1]/a")).GetAttribute("data-op");
-
-                op = op.Substring(0, op.IndexOf("IT", StringComparison.InvariantCulture));
+                var op = driver.FindElement(By.XPath("/html/body/header/div[3]/nav/ul/li/div/div/div[2]/ul[2]/li[2]/a")).GetAttribute("data-op");
 
                 string html = UI.GetRequestHtml(HttpMethod.Post, url, xauthtoken, op);
                 html = html.Substring(html.IndexOf("self.init", StringComparison.InvariantCulture));
