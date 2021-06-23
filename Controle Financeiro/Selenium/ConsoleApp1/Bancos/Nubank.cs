@@ -39,7 +39,7 @@ public static class Nubank
 
                 UI.Click(driver, By.ClassName("bills"));
 
-                UI.Wait(1.5);
+                UI.Wait(10);
                 
                 IList<IWebElement> chargesList = new List<IWebElement>();
 
